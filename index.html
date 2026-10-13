@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
+    
+  <style id="claude-scrollbar">@layer claude-scrollbar{*{scrollbar-width:thin}html{scrollbar-color:rgb(128 128 128 / 50%) transparent}}</style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Grade 9 Biology — Class Agenda</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&amp;family=DM+Sans:wght@300;400;500;600&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
   /* ═══════════════════════════════════════════
      EDIT GUIDE PANEL (visible only in edit mode)
@@ -178,7 +179,31 @@
   /* Student view (add ?view=student to the URL, e.g. in an LMS embed): hide teacher tools */
   html.student-view #edit-toggle,
   html.student-view #download-toggle,
-  html.student-view #edit-guide { display: none !important; }
+  html.student-view #edit-guide,
+  html.student-view #student-toggle,
+  html.student-view .ws-grid,
+  html.student-view .ws-title,
+  html.student-view #ws-library,
+  html.student-view #ws-modal { display: none !important; }
+
+  #student-toggle {
+    position: fixed; bottom: 24px; right: 340px; z-index: 9998;
+    background: #7b2d00; color: #fff; border: none; border-radius: 100px;
+    padding: 12px 22px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,.25); transition: background .2s, transform .1s;
+  }
+  #student-toggle:hover { background: #5e2200; transform: translateY(-1px); }
+  /* While the edit panel is open, slide the buttons left so the panel doesn't cover them */
+  body.edit-mode #edit-toggle { right: 404px; }
+  body.edit-mode #download-toggle { right: 550px; }
+  body.edit-mode #student-toggle { right: 720px; }
+  @media (max-width: 1100px) {
+    body.edit-mode #edit-toggle, body.edit-mode #download-toggle, body.edit-mode #student-toggle { right: 404px; }
+    body.edit-mode #download-toggle { bottom: 74px; }
+    body.edit-mode #student-toggle { bottom: 124px; }
+  }
+  @media (max-width: 600px) { #edit-guide { width: 100%; } body.edit-mode #edit-toggle, body.edit-mode #download-toggle, body.edit-mode #student-toggle { display: none; } }
+  @media (max-width: 600px) { #student-toggle { right: 24px; bottom: 124px; } }
 
   /* ═══════════════════════════════════════════
      MAIN STYLES
@@ -394,123 +419,33 @@
     @page { size: letter; margin: 0.55in; }
   }
 </style>
-<script>
-  // Student view: hide Edit/Download buttons when the URL ends in ?view=student
-  try { if (new URLSearchParams(location.search).get('view') === 'student') document.documentElement.classList.add('student-view'); } catch (e) {}
-</script>
-</head>
-<body>
+
+<style>.__cwhr-sel{outline:1px solid hsl(40 70% 40%) !important;outline-offset:0;}html[data-cwhr-mode]:not(#__cwhr_),html[data-cwhr-mode] :not(#__cwhr_){cursor:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'24'%20height%3D'24'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20d%3D'M12%20.5h0A11.5%2011.5%200%200%201%2023.5%2012v0A11.5%2011.5%200%200%201%2012%2023.5H2.5a2%202%200%200%201-2-2V12A11.5%2011.5%200%200%201%2012%20.5Z'%20fill%3D'%23fff'%20stroke%3D'rgba(0%2C0%2C0%2C0.22)'%20stroke-width%3D'1'%2F%3E%3C%2Fsvg%3E") 1 23, url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAACjklEQVR4AbRWS2gaURR9TGpiFTUEWpKQkA+EruqizWcRSBRT/G8KKpXiyo0ra1fVNiDFLmypFUo3iht/iO4Uay1FGwtFECl1p6KWLly4CGqrSMTY+wRFQ7WhGYd7Zu697845b+7M8B6BJh+UxcXFG3a7XeTxeHQAC+C12+1+ZLPZhHgMbp8FjLWxAkaj8U48Hg8lEomfIpEoLBaLLTKZTAd4LJFI3kD8HsZ+xGKxoMFgYI9T+JvAtUAg8FylUn3hcDj8ra0t6vLyMmKxWIhCofSAfZyDMRqXy+Wr1eqvPp/vKYjMAEZsRMDpdN6MRCKf+Xz+8cbGBm2kckIAtXShUGgKh8Mnfr9/Ybh0IKDT6a4vLS19EggE+wwGY7jmUj6TyUTQyv35+fmP0MbBexkISKVS+97e3u1LsU0oAo67Go3G1i/pCZjN5t3Nzc0H/zPzPlH/ip8EWvbQYrHs4hwWmN3e3n62traGfZy7MtbX12fYbPYTIKIQOzs7C6urq/cgINVWVlaO4EtjEXq9nken06mksgMZtJthtVp5xNzcHBsEIEWu0Wg0RKVS2USz2WTigFx6hPCkMTfRarXgB6WQzd/j63Q6bdK+nB7j0KnRaCCCIMpTE4D2oEql8m1qAvV6/VSr1U5PIJvN+qFjv6fyBIVC4ZfD4XgJAmekC9RqNZROp1+FQqESCCDSBWCVO1EoFC8wOQZpAnjm0Wj0O/xX94H4HNAzotvtNnreFU6lUgllMplAMpnclcvlp8NURC6Xi8BLGc5N9NvtNqpWq6hcLqN8Pn8OLUkAMe/g4EAOG4WzizcTJpPpA6zFIpfL9Ra2I45/IRgM2lKp1LtisXjs9XpvHR4eHimVythF4n78BwAA//8r8OPFAAAABklEQVQDAPCY8Oae0TJxAAAAAElFTkSuQmCC") 1 23, default !important;}html[data-cwhr-mode][data-cwhr-composing]:not(#__cwhr_),html[data-cwhr-mode][data-cwhr-composing] :not(#__cwhr_){cursor:default !important;}</style></head>
+<body id="artifacts-component-root-html" class="">
 
 <!-- ══════════════════════════════════════════
      EDIT GUIDE SIDEBAR
 ══════════════════════════════════════════ -->
-<div id="edit-guide">
-  <div class="guide-header">
-    <h2>✏️ Edit This Page</h2>
-    <p>Click fields to edit. Links open in new tab.</p>
-    <button class="guide-close" onclick="closeGuide()">✕</button>
-  </div>
-  <div class="guide-body">
 
-    <div class="guide-section" style="background:#eef7f1; margin:-8px -24px 28px; padding:16px 24px 20px; border-bottom:3px solid #2d6a4f;">
-      <h3 style="border-bottom:none; color:#2d6a4f;">⬇ Save Your Changes (Important)</h3>
-      <p style="font-size:12.5px; color:#333; line-height:1.6; margin-bottom:12px;">This page has no server or database — edits you make below only exist in <em>this browser tab</em> until you download an updated copy. There's a green <strong>⬇ Download Page</strong> button in the bottom-right corner of the screen at all times (next to the Edit Page button) — click it whenever you're ready to save.</p>
-      <button class="guide-apply-btn" style="background:#2d6a4f;" onclick="downloadUpdatedPage()">⬇ Download Updated Page</button>
-      <p style="font-size:11.5px; color:#6b6b5e; line-height:1.6; margin-top:10px;">This saves a new <code>.html</code> file with all your edits baked in. Re-upload it to wherever you're hosting this page (<b>same filename</b>, replacing the old one) — everyone who visits will then see your changes. You can click this any time; it always captures the page's current state.</p>
-    </div>
-
-    <div class="guide-section">
-      <h3>1 · Edit Text Directly</h3>
-      <div class="guide-step"><div class="num">1</div><div>Click <strong>✏️ Edit Page</strong> button (bottom right) to highlight all editable fields in orange.</div></div>
-      <div class="guide-step"><div class="num">2</div><div>Click any <span style="outline:2px dashed #fb8c00;border-radius:3px;padding:1px 4px;font-size:12px;">highlighted field</span> and type to replace text — teacher name, school, room, topics, objectives, etc.</div></div>
-      <div class="guide-step"><div class="num">3</div><div><strong>Worksheets are editable too:</strong> while in edit mode, open any worksheet with its button and type directly on it.</div></div>
-      <div class="guide-step"><div class="num">4</div><div>When finished, use the green <strong>⬇ Download Updated Page</strong> button above to save your changes to a file.</div></div>
-    </div>
-
-    <div class="guide-section">
-      <h3>2 · Update Header Info</h3>
-      <div class="guide-input-row">
-        <label>School / Department Name</label>
-        <input type="text" id="inp-school" placeholder="e.g. Tregaron · Science Department" />
-      </div>
-      <div class="guide-input-row">
-        <label>Teacher Name</label>
-        <input type="text" id="inp-teacher" placeholder="e.g. Ms. Garcia" />
-      </div>
-      <div class="guide-input-row">
-        <label>Room Number</label>
-        <input type="text" id="inp-room" placeholder="e.g. 204" />
-      </div>
-      <div class="guide-input-row">
-        <label>Semester</label>
-        <input type="text" id="inp-period" placeholder="e.g. Fall 2026 / Spring 2027" />
-      </div>
-      <button class="guide-apply-btn" onclick="applyHeader()">Apply Header Changes</button>
-    </div>
-
-    <div class="guide-section">
-      <h3>3 · Worksheet Links (Optional)</h3>
-      <p style="font-size:12px;color:#6b6b5e;margin-bottom:12px;line-height:1.5;">Every worksheet is already <b>built into this page</b> — its button opens a printable copy. Only paste a link here if you'd rather send students to your own file (e.g. a Google Drive doc). Clear a field and click Apply to go back to the built-in worksheet.</p>
-
-      <p style="font-size:11px;font-weight:700;color:#2d6a4f;margin:8px 0 4px;">🔬 Big Unit 1 — Cell Biology & Life Processes</p>
-      <div class="guide-input-row"><label>Reaction Time Ruler Drop Report Sheet</label><input type="url" id="ws-1-1" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Cell Structure & Organelle Diagrams</label><input type="url" id="ws-1-2" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Microscope Scale & Size Data Sheet</label><input type="url" id="ws-1-3" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Osmosis Lab Report Template</label><input type="url" id="ws-1-4" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Big Unit 1 Study Guide</label><input type="url" id="ws-1-5" placeholder="Built-in (paste link to override)…" /></div>
-
-      <p style="font-size:11px;font-weight:700;color:#1e4d8c;margin:12px 0 4px;">🌎 Big Unit 2 — Ecology & Populations</p>
-      <div class="guide-input-row"><label>Food Web & Energy Pyramid Worksheet</label><input type="url" id="ws-2-1" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Quadrat Sampling Data Sheet</label><input type="url" id="ws-2-2" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Population Growth Graphing Activity</label><input type="url" id="ws-2-3" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Symbiosis & Succession Sorting Activity</label><input type="url" id="ws-2-4" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Big Unit 2 Study Guide</label><input type="url" id="ws-2-5" placeholder="Built-in (paste link to override)…" /></div>
-
-      <p style="font-size:11px;font-weight:700;color:#7b2d00;margin:12px 0 4px;">🦋 Big Unit 3 — Evolution & Biodiversity</p>
-      <div class="guide-input-row"><label>Natural Selection Simulation Data Sheet</label><input type="url" id="ws-3-1" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Evidence for Evolution Analysis</label><input type="url" id="ws-3-2" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Taxonomy Classification Organizer</label><input type="url" id="ws-3-3" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Practice IA Project Guide</label><input type="url" id="ws-3-4" placeholder="Built-in (paste link to override)…" /></div>
-      <div class="guide-input-row"><label>Big Unit 3 + Final Exam Study Guide</label><input type="url" id="ws-3-5" placeholder="Built-in (paste link to override)…" /></div>
-
-      <button class="guide-apply-btn blue" onclick="applyLinks()">Apply Worksheet Links</button>
-    </div>
-
-    <div class="guide-section">
-      <h3>4 · Hosting & Updating This Page</h3>
-      <p style="font-size:12px;color:#6b6b5e;margin-bottom:10px;line-height:1.5;">Works the same regardless of where you host it — GitHub Pages, Netlify, a school web server, or a Google Drive preview link.</p>
-      <div class="guide-step"><div class="num">1</div><div>Upload this <code>.html</code> file to your host once, using a fixed filename (e.g. <code>agenda.html</code>).</div></div>
-      <div class="guide-step"><div class="num">2</div><div>Share that page's URL with students — bookmark it, post it in your LMS, or link it from your class site.</div></div>
-      <div class="guide-step"><div class="num">3</div><div>Whenever you make changes: edit → click <strong>⬇ Download Updated Page</strong> above → re-upload the downloaded file to your host, <strong>overwriting the same filename</strong>.</div></div>
-      <div class="guide-step"><div class="num">4</div><div>Because the filename and URL stay the same, students' bookmarked link automatically shows the latest version — no need to re-share a new link each time.</div></div>
-    </div>
-
-    <div class="guide-section">
-      <h3>5 · Printing Worksheets</h3>
-      <div class="guide-step"><div class="num">1</div><div>Click a worksheet's <strong>Open / Print</strong> button.</div></div>
-      <div class="guide-step"><div class="num">2</div><div>Click <strong>🖨 Print</strong> at the top of the worksheet. Only the worksheet prints — or choose "Save as PDF" to make a file for your LMS.</div></div>
-    </div>
-
-  </div>
-</div>
 
 <!-- ══════════════════════════════════════════
      EDIT TOGGLE BUTTON
 ══════════════════════════════════════════ -->
-<button id="download-toggle" onclick="downloadUpdatedPage()" title="Download this page with all current edits, ready to re-upload to your host">⬇ Download Page</button>
-<button id="edit-toggle" onclick="toggleEdit()">✏️ Edit Page</button>
+
+
+
 
 <!-- ══════════════════════════════════════════
      MAIN PAGE
 ══════════════════════════════════════════ -->
 <header>
   <div class="header-inner">
-    <div class="school-label" data-editable contenteditable="false">Academic Year 2026 – 2027 &nbsp;·&nbsp; Science Department</div>
+    <div class="school-label">Academic Year 2026 – 2027 &nbsp;·&nbsp; Science Department</div>
     <h1>Grade 9 <span>Biology</span><br>Class Agenda</h1>
     <div class="header-meta">
-      <span><b>Instructor:</b> <span id="meta-teacher" data-editable contenteditable="false">[Teacher Name]</span></span>
-      <span><b>Room:</b> <span id="meta-room" data-editable contenteditable="false">[Room No.]</span></span>
-      <span><b>Semester:</b> <span id="meta-period" data-editable contenteditable="false">[Fall / Spring]</span></span>
+      <span><b>Instructor:</b> <span id="meta-teacher">Rosalyn Manio</span></span>
+      <span><b>Room:</b> <span id="meta-room">LCB 101</span></span>
+      <span><b>Semester:</b> <span id="meta-period">[Fall / Spring]</span></span>
       <span><b>Credits:</b> 0.5 (one semester)</span>
     </div>
   </div>
@@ -519,9 +454,9 @@
 <div class="nav-wrap">
   <div class="tabs">
     <button class="tab-btn active" data-unit="0" onclick="showPanel(0)">📋 Overview</button>
-    <button class="tab-btn" data-unit="1" onclick="showPanel(1)">🔬 Big Unit 1 — Cell Biology & Life Processes</button>
-    <button class="tab-btn" data-unit="2" onclick="showPanel(2)">🌎 Big Unit 2 — Ecology & Populations</button>
-    <button class="tab-btn" data-unit="3" onclick="showPanel(3)">🦋 Big Unit 3 — Evolution & Biodiversity</button>
+    <button class="tab-btn" data-unit="1" onclick="showPanel(1)">🔬 Big Unit 1 — Cell Biology &amp; Life Processes</button>
+    <button class="tab-btn" data-unit="2" onclick="showPanel(2)">🌎 Big Unit 2 — Ecology &amp; Populations</button>
+    <button class="tab-btn" data-unit="3" onclick="showPanel(3)">🦋 Big Unit 3 — Evolution &amp; Biodiversity</button>
   </div>
 </div>
 
@@ -533,39 +468,39 @@
     <div class="calendar-strip">
       <div class="cal-cell" data-goto="1" onclick="showPanel(1)">
         <div class="weeks">Weeks 1 – 8</div>
-        <div class="cal-title">Big Unit 1<br>Cell Biology & Life Processes</div>
+        <div class="cal-title">Big Unit 1<br>Cell Biology &amp; Life Processes</div>
       </div>
       <div class="cal-cell" data-goto="2" onclick="showPanel(2)">
         <div class="weeks">Weeks 9 – 12</div>
-        <div class="cal-title">Big Unit 2<br>Ecology & Populations</div>
+        <div class="cal-title">Big Unit 2<br>Ecology &amp; Populations</div>
       </div>
       <div class="cal-cell" data-goto="3" onclick="showPanel(3)">
         <div class="weeks">Weeks 13 – 17</div>
-        <div class="cal-title">Big Unit 3<br>Evolution & Biodiversity + Final Exam</div>
+        <div class="cal-title">Big Unit 3<br>Evolution &amp; Biodiversity + Final Exam</div>
       </div>
     </div>
 
-    <div class="ib-note" data-editable contenteditable="false">
-      <b>Pacing note:</b> Weeks shown reflect the Fall 2026–27 offering (17 instructional weeks). This course also runs as a compressed 15-week Spring 2026–27 section; Big Unit boundaries shift slightly earlier in that version, and two sub-topics (Nature of Science, Biodiversity & Human Impact) compress from 2 weeks to 1. This course is a pre-IB semester course that prepares students for IB Diploma Programme (DP) Biology in Grades 11–12.
+    <div class="ib-note">
+      <b>Pacing note:</b> Weeks shown reflect the Fall 2026–27 offering (17 instructional weeks). This course also runs as a compressed 15-week Spring 2026–27 section; Big Unit boundaries shift slightly earlier in that version, and two sub-topics (Nature of Science, Biodiversity &amp; Human Impact) compress from 2 weeks to 1. This course is a pre-IB semester course that prepares students for IB Diploma Programme (DP) Biology in Grades 11–12.
     </div>
 
     <div class="section-title">Unit Summaries</div>
     <div class="overview-grid">
       <div class="unit-card" data-goto="1" onclick="showPanel(1)">
         <div class="unit-num">Big Unit 1</div>
-        <h3>Cell Biology & Life Processes</h3>
-        <p>Nature of science & lab skills, cell structure & function, cell transport & homeostasis, and energy in cells.</p>
+        <h3>Cell Biology &amp; Life Processes</h3>
+        <p>Nature of science &amp; lab skills, cell structure &amp; function, cell transport &amp; homeostasis, and energy in cells.</p>
         <span class="goto-link">Open unit →</span>
       </div>
       <div class="unit-card" data-goto="2" onclick="showPanel(2)">
         <div class="unit-num">Big Unit 2</div>
-        <h3>Ecology & Populations</h3>
-        <p>Ecosystem structure, energy flow, and population & community ecology.</p>
+        <h3>Ecology &amp; Populations</h3>
+        <p>Ecosystem structure, energy flow, and population &amp; community ecology.</p>
         <span class="goto-link">Open unit →</span>
       </div>
       <div class="unit-card" data-goto="3" onclick="showPanel(3)">
         <div class="unit-num">Big Unit 3</div>
-        <h3>Evolution & Biodiversity</h3>
+        <h3>Evolution &amp; Biodiversity</h3>
         <p>Natural selection, evidence for evolution, classification, and human impact on biodiversity — culminating in an independent "practice IA" research project.</p>
         <span class="goto-link">Open unit →</span>
       </div>
@@ -575,11 +510,11 @@
     <table class="lessons-table" style="margin-bottom:0">
       <thead><tr><th>Category</th><th>Weight</th><th>Includes</th></tr></thead>
       <tbody>
-        <tr><td class="topic">Tests & Exams</td><td>30%</td><td class="objectives">Big Unit tests, final cumulative exam</td></tr>
-        <tr><td class="topic">Lab Reports & Investigations</td><td>20%</td><td class="objectives">Full IMRaD-style lab reports, CER conclusions</td></tr>
+        <tr><td class="topic">Tests &amp; Exams</td><td>30%</td><td class="objectives">Big Unit tests, final cumulative exam</td></tr>
+        <tr><td class="topic">Lab Reports &amp; Investigations</td><td>20%</td><td class="objectives">Full IMRaD-style lab reports, CER conclusions</td></tr>
         <tr><td class="topic">Quizzes</td><td>15%</td><td class="objectives">Midpoint checkpoint, lesson-level quizzes</td></tr>
         <tr><td class="topic">Independent Research Project ("Practice IA")</td><td>15%</td><td class="objectives">Big Unit 3 capstone — research question, data, graph, CER conclusion</td></tr>
-        <tr><td class="topic">Worksheets & Homework</td><td>15%</td><td class="objectives">Guided notes, bell ringers, practice sets</td></tr>
+        <tr><td class="topic">Worksheets &amp; Homework</td><td>15%</td><td class="objectives">Guided notes, bell ringers, practice sets</td></tr>
         <tr><td class="topic">Participation</td><td>5%</td><td class="objectives">Class discussions, group lab work</td></tr>
       </tbody>
     </table>
@@ -589,8 +524,8 @@
   <div class="panel" id="panel-1" data-unit="1">
     <div class="unit-hero" data-unit="1" data-symbol="🧫">
       <div class="unit-tag">Big Unit 1 · Weeks 1–8</div>
-      <h2>Cell Biology & Life Processes</h2>
-      <p data-editable contenteditable="false">Students build the foundational science-process skills (experimental design, variables, graphing, CER) that anchor the rest of the course, then apply them to cell structure, membrane transport, homeostasis, and how cells capture and use energy.</p>
+      <h2>Cell Biology &amp; Life Processes</h2>
+      <p>Students build the foundational science-process skills (experimental design, variables, graphing, CER) that anchor the rest of the course, then apply them to cell structure, membrane transport, homeostasis, and how cells capture and use energy.</p>
       <div class="meta-row">
         <span class="meta-pill">⏱ 8 weeks</span>
         <span class="meta-pill">📋 4 labs</span>
@@ -599,55 +534,49 @@
     </div>
     <div class="section-title">Essential Questions</div>
     <ul class="eq-list">
-      <li data-editable contenteditable="false">What are the defining structures and processes that make a cell the basic unit of life?</li>
-      <li data-editable contenteditable="false">How do cells regulate what enters and exits, and why does this matter for survival?</li>
-      <li data-editable contenteditable="false">How do cells capture and use energy to power life's processes?</li>
+      <li>What are the defining structures and processes that make a cell the basic unit of life?</li>
+      <li>How do cells regulate what enters and exits, and why does this matter for survival?</li>
+      <li>How do cells capture and use energy to power life's processes?</li>
     </ul>
     <div class="section-title">Lesson Schedule</div>
     <div class="lessons-wrap">
       <table class="lessons-table">
         <thead><tr><th>Day</th><th>Topic</th><th>Objectives</th><th>Type</th></tr></thead>
         <tbody>
-          <tr><td class="day-num">Day 1</td><td class="topic" data-editable contenteditable="false">Scientific Method & Variables</td><td class="objectives" data-editable contenteditable="false">Outline the steps of the scientific method; distinguish independent, dependent, and controlled variables</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 2</td><td class="topic" data-editable contenteditable="false">Lab Skills & Measurement</td><td class="objectives" data-editable contenteditable="false">Describe safe, accurate use of lab equipment including the microscope; distinguish accuracy vs. precision</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 3</td><td class="topic" data-editable contenteditable="false">Lab: Reaction Time Ruler Drop Fair Test</td><td class="objectives" data-editable contenteditable="false">Design and run a full fair-test cycle; identify IV/DV/constants; write a CER conclusion</td><td><span class="tag tag-lab">Lab</span></td></tr>
-          <tr><td class="day-num">Day 4</td><td class="topic" data-editable contenteditable="false">Prokaryotic vs. Eukaryotic Cells</td><td class="objectives" data-editable contenteditable="false">Compare prokaryotic and eukaryotic cells; describe the structure and function of each</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 5</td><td class="topic" data-editable contenteditable="false">Cell Theory & Endosymbiotic Theory</td><td class="objectives" data-editable contenteditable="false">State the three tenets of cell theory; describe how endosymbiotic theory relates to it</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 6</td><td class="topic" data-editable contenteditable="false">The Microscope & Its History</td><td class="objectives" data-editable contenteditable="false">Discuss the importance of the invention of the microscope to biology</td><td><span class="tag tag-vid">Video + Discussion</span></td></tr>
-          <tr><td class="day-num">Day 7</td><td class="topic" data-editable contenteditable="false">Lab: Microscope Scale & Size Data</td><td class="objectives" data-editable contenteditable="false">Measure cell size across magnifications; graph magnification vs. apparent size</td><td><span class="tag tag-lab">Lab</span></td></tr>
-          <tr><td class="day-num">Day 8</td><td class="topic" data-editable contenteditable="false">Viruses — Structure & Function</td><td class="objectives" data-editable contenteditable="false">Briefly outline what a virus is and how it works</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 9</td><td class="topic" data-editable contenteditable="false">Are Viruses Alive? Debate</td><td class="objectives" data-editable contenteditable="false">Outline the debate over whether viruses are alive; distinguish replication from reproduction</td><td><span class="tag tag-disc">Discussion / Debate</span></td></tr>
-          <tr><td class="day-num">Day 10</td><td class="topic" data-editable contenteditable="false">Plant vs. Animal Cells & Organelles</td><td class="objectives" data-editable contenteditable="false">Compare plant and animal cell structures; identify major organelles and their functions</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 11</td><td class="topic" data-editable contenteditable="false">Quiz — Cell Structure & Function</td><td class="objectives" data-editable contenteditable="false">Assess understanding of Days 4–10</td><td><span class="tag tag-quiz">Quiz</span></td></tr>
-          <tr><td class="day-num">Day 12</td><td class="topic" data-editable contenteditable="false">Diffusion & Osmosis</td><td class="objectives" data-editable contenteditable="false">Define diffusion and osmosis; predict direction of water movement given solute concentrations</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 13</td><td class="topic" data-editable contenteditable="false">Hypertonic, Hypotonic & Isotonic Solutions</td><td class="objectives" data-editable contenteditable="false">Distinguish between the three solution types and predict cell behavior in each</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 14</td><td class="topic" data-editable contenteditable="false">Active Transport & Selective Permeability</td><td class="objectives" data-editable contenteditable="false">Describe active transport and how it differs from passive transport; explain selective permeability</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 15–16</td><td class="topic" data-editable contenteditable="false">Lab: Osmosis in Potato/Egg Cells</td><td class="objectives" data-editable contenteditable="false">Full experimental cycle: hypothesis, data table, % mass-change graph, CER conclusion</td><td><span class="tag tag-lab">Lab</span></td></tr>
-          <tr><td class="day-num">Day 17</td><td class="topic" data-editable contenteditable="false">Homeostasis</td><td class="objectives" data-editable contenteditable="false">Define homeostasis and explain its importance to a living cell</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 18</td><td class="topic" data-editable contenteditable="false">Photosynthesis Overview</td><td class="objectives" data-editable contenteditable="false">Outline the overall inputs and outputs of photosynthesis</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 19</td><td class="topic" data-editable contenteditable="false">Cellular Respiration & ATP</td><td class="objectives" data-editable contenteditable="false">Outline inputs/outputs of cellular respiration; describe ATP as the cell's energy currency</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 20–21</td><td class="topic" data-editable contenteditable="false">Lab: Elodea Photosynthesis Rate</td><td class="objectives" data-editable contenteditable="false">Manipulate light distance; graph rate vs. distance; identify limiting factors in a CER conclusion</td><td><span class="tag tag-lab">Lab</span></td></tr>
-          <tr><td class="day-num">Day 22</td><td class="topic" data-editable contenteditable="false">Review & Study Guide</td><td class="objectives" data-editable contenteditable="false">Consolidate Big Unit 1 concepts; practice test questions</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 23</td><td class="topic" data-editable contenteditable="false">Big Unit 1 Test</td><td class="objectives" data-editable contenteditable="false">Comprehensive assessment: nature of science, cell structure, transport, energy</td><td><span class="tag tag-test">Unit Test</span></td></tr>
+          <tr><td class="day-num">Day 1</td><td class="topic">Scientific Method &amp; Variables</td><td class="objectives">Outline the steps of the scientific method; distinguish independent, dependent, and controlled variables</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 2</td><td class="topic">Lab Skills &amp; Measurement</td><td class="objectives">Describe safe, accurate use of lab equipment including the microscope; distinguish accuracy vs. precision</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 3</td><td class="topic">Lab: Reaction Time Ruler Drop Fair Test</td><td class="objectives">Design and run a full fair-test cycle; identify IV/DV/constants; write a CER conclusion</td><td><span class="tag tag-lab">Lab</span></td></tr>
+          <tr><td class="day-num">Day 4</td><td class="topic">Prokaryotic vs. Eukaryotic Cells</td><td class="objectives">Compare prokaryotic and eukaryotic cells; describe the structure and function of each</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 5</td><td class="topic">Cell Theory &amp; Endosymbiotic Theory</td><td class="objectives">State the three tenets of cell theory; describe how endosymbiotic theory relates to it</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 6</td><td class="topic">The Microscope &amp; Its History</td><td class="objectives">Discuss the importance of the invention of the microscope to biology</td><td><span class="tag tag-vid">Video + Discussion</span></td></tr>
+          <tr><td class="day-num">Day 7</td><td class="topic">Lab: Microscope Scale &amp; Size Data</td><td class="objectives">Measure cell size across magnifications; graph magnification vs. apparent size</td><td><span class="tag tag-lab">Lab</span></td></tr>
+          <tr><td class="day-num">Day 8</td><td class="topic">Viruses — Structure &amp; Function</td><td class="objectives">Briefly outline what a virus is and how it works</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 9</td><td class="topic">Are Viruses Alive? Debate</td><td class="objectives">Outline the debate over whether viruses are alive; distinguish replication from reproduction</td><td><span class="tag tag-disc">Discussion / Debate</span></td></tr>
+          <tr><td class="day-num">Day 10</td><td class="topic">Plant vs. Animal Cells &amp; Organelles</td><td class="objectives">Compare plant and animal cell structures; identify major organelles and their functions</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 11</td><td class="topic">Quiz — Cell Structure &amp; Function</td><td class="objectives">Assess understanding of Days 4–10</td><td><span class="tag tag-quiz">Quiz</span></td></tr>
+          <tr><td class="day-num">Day 12</td><td class="topic">Diffusion &amp; Osmosis</td><td class="objectives">Define diffusion and osmosis; predict direction of water movement given solute concentrations</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 13</td><td class="topic">Hypertonic, Hypotonic &amp; Isotonic Solutions</td><td class="objectives">Distinguish between the three solution types and predict cell behavior in each</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 14</td><td class="topic">Active Transport &amp; Selective Permeability</td><td class="objectives">Describe active transport and how it differs from passive transport; explain selective permeability</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 15–16</td><td class="topic">Lab: Osmosis in Potato/Egg Cells</td><td class="objectives">Full experimental cycle: hypothesis, data table, % mass-change graph, CER conclusion</td><td><span class="tag tag-lab">Lab</span></td></tr>
+          <tr><td class="day-num">Day 17</td><td class="topic">Homeostasis</td><td class="objectives">Define homeostasis and explain its importance to a living cell</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 18</td><td class="topic">Photosynthesis Overview</td><td class="objectives">Outline the overall inputs and outputs of photosynthesis</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 19</td><td class="topic">Cellular Respiration &amp; ATP</td><td class="objectives">Outline inputs/outputs of cellular respiration; describe ATP as the cell's energy currency</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 20–21</td><td class="topic">Lab: Elodea Photosynthesis Rate</td><td class="objectives">Manipulate light distance; graph rate vs. distance; identify limiting factors in a CER conclusion</td><td><span class="tag tag-lab">Lab</span></td></tr>
+          <tr><td class="day-num">Day 22</td><td class="topic">Review &amp; Study Guide</td><td class="objectives">Consolidate Big Unit 1 concepts; practice test questions</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 23</td><td class="topic">Big Unit 1 Test</td><td class="objectives">Comprehensive assessment: nature of science, cell structure, transport, energy</td><td><span class="tag tag-test">Unit Test</span></td></tr>
         </tbody>
       </table>
     </div>
-    <div class="section-title">Worksheets & Resources</div>
-    <div class="ws-grid">
-      <div class="ws-card"><div class="ws-icon">⏱</div><h4>Reaction Time Ruler Drop Report Sheet</h4><p>Full fair-test report: variables, data table, graph, and CER conclusion, with a built-in conversion table.</p><a class="ws-btn" id="ws-btn-1-1" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">🔍</div><h4>Cell Structure & Organelle Diagrams</h4><p>Prokaryotic, plant, and animal cell diagrams to label, plus a cell-theory & endosymbiosis worksheet.</p><a class="ws-btn" id="ws-btn-1-2" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">🔬</div><h4>Microscope Scale & Size Data Sheet</h4><p>Data table and graph template for the magnification-vs-cell-size investigation.</p><a class="ws-btn" id="ws-btn-1-3" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">🥔</div><h4>Osmosis Lab Report Template</h4><p>Structured IMRaD report with hypothesis, data table, % change graph, and CER prompts.</p><a class="ws-btn" id="ws-btn-1-4" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">📝</div><h4>Big Unit 1 Study Guide</h4><p>All 27 unit objectives, key vocabulary, and sample questions aligned to the unit test.</p><a class="ws-btn" id="ws-btn-1-5" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-    </div>
+    
+    
   </div>
 
   <!-- BIG UNIT 2 -->
   <div class="panel" id="panel-2" data-unit="2">
     <div class="unit-hero" data-unit="2" data-symbol="🌎">
       <div class="unit-tag">Big Unit 2 · Weeks 9–12</div>
-      <h2>Ecology & Populations</h2>
-      <p data-editable contenteditable="false">Students zoom out from the cell to the ecosystem, tracing energy flow through food webs and trophic levels, then examining what drives population growth, competition, and community structure.</p>
+      <h2>Ecology &amp; Populations</h2>
+      <p>Students zoom out from the cell to the ecosystem, tracing energy flow through food webs and trophic levels, then examining what drives population growth, competition, and community structure.</p>
       <div class="meta-row">
         <span class="meta-pill">⏱ 4 weeks</span>
         <span class="meta-pill">📋 2 labs</span>
@@ -656,47 +585,41 @@
     </div>
     <div class="section-title">Essential Questions</div>
     <ul class="eq-list">
-      <li data-editable contenteditable="false">How does energy flow and matter cycle through an ecosystem?</li>
-      <li data-editable contenteditable="false">What determines whether a population grows, stabilizes, or declines?</li>
-      <li data-editable contenteditable="false">How are organisms interconnected within their community and environment?</li>
+      <li>How does energy flow and matter cycle through an ecosystem?</li>
+      <li>What determines whether a population grows, stabilizes, or declines?</li>
+      <li>How are organisms interconnected within their community and environment?</li>
     </ul>
     <div class="section-title">Lesson Schedule</div>
     <div class="lessons-wrap">
       <table class="lessons-table">
         <thead><tr><th>Day</th><th>Topic</th><th>Objectives</th><th>Type</th></tr></thead>
         <tbody>
-          <tr><td class="day-num">Day 1</td><td class="topic" data-editable contenteditable="false">Biotic & Abiotic Factors</td><td class="objectives" data-editable contenteditable="false">Distinguish between biotic and abiotic factors in an ecosystem</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 2</td><td class="topic" data-editable contenteditable="false">Producers, Consumers & Decomposers</td><td class="objectives" data-editable contenteditable="false">Define each role and give an example; construct and interpret a food web</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 3</td><td class="topic" data-editable contenteditable="false">Energy Flow & the 10% Rule</td><td class="objectives" data-editable contenteditable="false">Apply the 10% rule to calculate energy transfer; construct an energy pyramid from data</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 4</td><td class="topic" data-editable contenteditable="false">Biomes</td><td class="objectives" data-editable contenteditable="false">Compare biome types in terms of climate and characteristic organisms</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 5–6</td><td class="topic" data-editable contenteditable="false">Lab: Quadrat Sampling Investigation</td><td class="objectives" data-editable contenteditable="false">Sample population density; graph species abundance; discuss sampling error in a CER conclusion</td><td><span class="tag tag-lab">Lab</span></td></tr>
-          <tr><td class="day-num">Day 7</td><td class="topic" data-editable contenteditable="false">Population Growth Models</td><td class="objectives" data-editable contenteditable="false">Distinguish exponential and logistic population growth</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 8</td><td class="topic" data-editable contenteditable="false">Carrying Capacity</td><td class="objectives" data-editable contenteditable="false">Define carrying capacity; interpret a population growth graph to identify its phase</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 9</td><td class="topic" data-editable contenteditable="false">Symbiosis</td><td class="objectives" data-editable contenteditable="false">Distinguish mutualism, commensalism, and parasitism with examples</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 10</td><td class="topic" data-editable contenteditable="false">Ecological Succession</td><td class="objectives" data-editable contenteditable="false">Outline the process of succession, distinguishing primary from secondary</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 11</td><td class="topic" data-editable contenteditable="false">Lab: Yeast/Bacteria Growth Curve Analysis</td><td class="objectives" data-editable contenteditable="false">Graph population size over time; label growth phases; identify carrying capacity from data</td><td><span class="tag tag-lab">Lab</span></td></tr>
-          <tr><td class="day-num">Day 12</td><td class="topic" data-editable contenteditable="false">Quiz — Ecology & Populations</td><td class="objectives" data-editable contenteditable="false">Assess understanding of Days 1–11</td><td><span class="tag tag-quiz">Quiz</span></td></tr>
-          <tr><td class="day-num">Day 13</td><td class="topic" data-editable contenteditable="false">Review & Study Guide</td><td class="objectives" data-editable contenteditable="false">Consolidate Big Unit 2 concepts; practice test questions</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 14</td><td class="topic" data-editable contenteditable="false">Big Unit 2 Test</td><td class="objectives" data-editable contenteditable="false">Comprehensive assessment: ecosystem structure, population & community ecology</td><td><span class="tag tag-test">Unit Test</span></td></tr>
+          <tr><td class="day-num">Day 1</td><td class="topic">Biotic &amp; Abiotic Factors</td><td class="objectives">Distinguish between biotic and abiotic factors in an ecosystem</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 2</td><td class="topic">Producers, Consumers &amp; Decomposers</td><td class="objectives">Define each role and give an example; construct and interpret a food web</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 3</td><td class="topic">Energy Flow &amp; the 10% Rule</td><td class="objectives">Apply the 10% rule to calculate energy transfer; construct an energy pyramid from data</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 4</td><td class="topic">Biomes</td><td class="objectives">Compare biome types in terms of climate and characteristic organisms</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 5–6</td><td class="topic">Lab: Quadrat Sampling Investigation</td><td class="objectives">Sample population density; graph species abundance; discuss sampling error in a CER conclusion</td><td><span class="tag tag-lab">Lab</span></td></tr>
+          <tr><td class="day-num">Day 7</td><td class="topic">Population Growth Models</td><td class="objectives">Distinguish exponential and logistic population growth</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 8</td><td class="topic">Carrying Capacity</td><td class="objectives">Define carrying capacity; interpret a population growth graph to identify its phase</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 9</td><td class="topic">Symbiosis</td><td class="objectives">Distinguish mutualism, commensalism, and parasitism with examples</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 10</td><td class="topic">Ecological Succession</td><td class="objectives">Outline the process of succession, distinguishing primary from secondary</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 11</td><td class="topic">Lab: Yeast/Bacteria Growth Curve Analysis</td><td class="objectives">Graph population size over time; label growth phases; identify carrying capacity from data</td><td><span class="tag tag-lab">Lab</span></td></tr>
+          <tr><td class="day-num">Day 12</td><td class="topic">Quiz — Ecology &amp; Populations</td><td class="objectives">Assess understanding of Days 1–11</td><td><span class="tag tag-quiz">Quiz</span></td></tr>
+          <tr><td class="day-num">Day 13</td><td class="topic">Review &amp; Study Guide</td><td class="objectives">Consolidate Big Unit 2 concepts; practice test questions</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 14</td><td class="topic">Big Unit 2 Test</td><td class="objectives">Comprehensive assessment: ecosystem structure, population &amp; community ecology</td><td><span class="tag tag-test">Unit Test</span></td></tr>
         </tbody>
       </table>
     </div>
-    <div class="section-title">Worksheets & Resources</div>
-    <div class="ws-grid">
-      <div class="ws-card"><div class="ws-icon">🕸</div><h4>Food Web & Energy Pyramid Worksheet</h4><p>Build a food web from given organisms; calculate energy transfer using the 10% rule.</p><a class="ws-btn" id="ws-btn-2-1" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">🌱</div><h4>Quadrat Sampling Data Sheet</h4><p>Field or simulated sampling data table, graph template, and sampling-error discussion prompts.</p><a class="ws-btn" id="ws-btn-2-2" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">📈</div><h4>Population Growth Graphing Activity</h4><p>Practice sketching and interpreting exponential vs. logistic growth curves.</p><a class="ws-btn" id="ws-btn-2-3" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">🤝</div><h4>Symbiosis & Succession Sorting Activity</h4><p>Card-sort activity classifying relationship types and succession stages.</p><a class="ws-btn" id="ws-btn-2-4" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">📝</div><h4>Big Unit 2 Study Guide</h4><p>All 11 unit objectives, key vocabulary, and sample questions aligned to the unit test.</p><a class="ws-btn" id="ws-btn-2-5" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-    </div>
+    
+    
   </div>
 
   <!-- BIG UNIT 3 -->
   <div class="panel" id="panel-3" data-unit="3">
     <div class="unit-hero" data-unit="3" data-symbol="🦋">
       <div class="unit-tag">Big Unit 3 · Weeks 13–17</div>
-      <h2>Evolution & Biodiversity</h2>
-      <p data-editable contenteditable="false">Students examine the evidence for evolution and the mechanism of natural selection, then apply classification systems and evaluate human impact on biodiversity — culminating in an independent research project styled as a practice IA.</p>
+      <h2>Evolution &amp; Biodiversity</h2>
+      <p>Students examine the evidence for evolution and the mechanism of natural selection, then apply classification systems and evaluate human impact on biodiversity — culminating in an independent research project styled as a practice IA.</p>
       <div class="meta-row">
         <span class="meta-pill">⏱ 5 weeks (incl. final review)</span>
         <span class="meta-pill">📋 1 lab + 1 project</span>
@@ -705,1049 +628,55 @@
     </div>
     <div class="section-title">Essential Questions</div>
     <ul class="eq-list">
-      <li data-editable contenteditable="false">What evidence supports the theory of evolution by natural selection?</li>
-      <li data-editable contenteditable="false">How does natural selection produce the diversity of life we see today?</li>
-      <li data-editable contenteditable="false">How do human activities affect biodiversity, and what can be done about it?</li>
+      <li>What evidence supports the theory of evolution by natural selection?</li>
+      <li>How does natural selection produce the diversity of life we see today?</li>
+      <li>How do human activities affect biodiversity, and what can be done about it?</li>
     </ul>
     <div class="section-title">Lesson Schedule</div>
     <div class="lessons-wrap">
       <table class="lessons-table">
         <thead><tr><th>Day</th><th>Topic</th><th>Objectives</th><th>Type</th></tr></thead>
         <tbody>
-          <tr><td class="day-num">Day 1</td><td class="topic" data-editable contenteditable="false">Evidence for Evolution</td><td class="objectives" data-editable contenteditable="false">Outline evidence supporting evolution: fossil record, comparative anatomy, molecular evidence</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 2</td><td class="topic" data-editable contenteditable="false">Darwin & Natural Selection</td><td class="objectives" data-editable contenteditable="false">Explain Darwin's mechanism of natural selection</td><td><span class="tag tag-vid">Video + Discussion</span></td></tr>
-          <tr><td class="day-num">Day 3</td><td class="topic" data-editable contenteditable="false">Variation, Adaptation & Selective Pressure</td><td class="objectives" data-editable contenteditable="false">Distinguish variation, adaptation, and selective pressure</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 4–5</td><td class="topic" data-editable contenteditable="false">Lab: Natural Selection Simulation</td><td class="objectives" data-editable contenteditable="false">Run generational predation trials; graph allele-frequency change; write a CER conclusion</td><td><span class="tag tag-lab">Lab</span></td></tr>
-          <tr><td class="day-num">Day 6</td><td class="topic" data-editable contenteditable="false">Speciation & Genetic Drift</td><td class="objectives" data-editable contenteditable="false">Explain how natural selection can lead to speciation; distinguish it from random genetic drift</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 7</td><td class="topic" data-editable contenteditable="false">Taxonomic Classification</td><td class="objectives" data-editable contenteditable="false">Outline the hierarchy of classification from domain to species</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 8</td><td class="topic" data-editable contenteditable="false">Purpose of Classification Systems</td><td class="objectives" data-editable contenteditable="false">Explain the purpose and value of biological classification systems</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 9</td><td class="topic" data-editable contenteditable="false">Biodiversity & Ecosystem Stability</td><td class="objectives" data-editable contenteditable="false">Define biodiversity and explain its importance to ecosystem stability</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 10</td><td class="topic" data-editable contenteditable="false">Human Impact on Biodiversity</td><td class="objectives" data-editable contenteditable="false">Evaluate the impact of pollution, habitat loss, and climate change on biodiversity using data</td><td><span class="tag tag-disc">Discussion</span></td></tr>
-          <tr><td class="day-num">Day 11–14</td><td class="topic" data-editable contenteditable="false">Independent Research Project ("Practice IA")</td><td class="objectives" data-editable contenteditable="false">Design and conduct an independent investigation applying the full inquiry cycle: question, data, graph, CER conclusion</td><td><span class="tag tag-proj">Project</span></td></tr>
-          <tr><td class="day-num">Day 15</td><td class="topic" data-editable contenteditable="false">Review & Study Guide</td><td class="objectives" data-editable contenteditable="false">Consolidate Big Unit 3 concepts; practice test questions</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
-          <tr><td class="day-num">Day 16</td><td class="topic" data-editable contenteditable="false">Big Unit 3 Test</td><td class="objectives" data-editable contenteditable="false">Comprehensive assessment: evolution, natural selection, classification, biodiversity</td><td><span class="tag tag-test">Unit Test</span></td></tr>
-          <tr><td class="day-num">Week 17</td><td class="topic" data-editable contenteditable="false">Final Exam</td><td class="objectives" data-editable contenteditable="false">Cumulative exam covering all 3 Big Units, with emphasis on graphing and CER skills</td><td><span class="tag tag-test">Final Exam</span></td></tr>
+          <tr><td class="day-num">Day 1</td><td class="topic">Evidence for Evolution</td><td class="objectives">Outline evidence supporting evolution: fossil record, comparative anatomy, molecular evidence</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 2</td><td class="topic">Darwin &amp; Natural Selection</td><td class="objectives">Explain Darwin's mechanism of natural selection</td><td><span class="tag tag-vid">Video + Discussion</span></td></tr>
+          <tr><td class="day-num">Day 3</td><td class="topic">Variation, Adaptation &amp; Selective Pressure</td><td class="objectives">Distinguish variation, adaptation, and selective pressure</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 4–5</td><td class="topic">Lab: Natural Selection Simulation</td><td class="objectives">Run generational predation trials; graph allele-frequency change; write a CER conclusion</td><td><span class="tag tag-lab">Lab</span></td></tr>
+          <tr><td class="day-num">Day 6</td><td class="topic">Speciation &amp; Genetic Drift</td><td class="objectives">Explain how natural selection can lead to speciation; distinguish it from random genetic drift</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 7</td><td class="topic">Taxonomic Classification</td><td class="objectives">Outline the hierarchy of classification from domain to species</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 8</td><td class="topic">Purpose of Classification Systems</td><td class="objectives">Explain the purpose and value of biological classification systems</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 9</td><td class="topic">Biodiversity &amp; Ecosystem Stability</td><td class="objectives">Define biodiversity and explain its importance to ecosystem stability</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 10</td><td class="topic">Human Impact on Biodiversity</td><td class="objectives">Evaluate the impact of pollution, habitat loss, and climate change on biodiversity using data</td><td><span class="tag tag-disc">Discussion</span></td></tr>
+          <tr><td class="day-num">Day 11–14</td><td class="topic">Independent Research Project ("Practice IA")</td><td class="objectives">Design and conduct an independent investigation applying the full inquiry cycle: question, data, graph, CER conclusion</td><td><span class="tag tag-proj">Project</span></td></tr>
+          <tr><td class="day-num">Day 15</td><td class="topic">Review &amp; Study Guide</td><td class="objectives">Consolidate Big Unit 3 concepts; practice test questions</td><td><span class="tag tag-ws">Worksheet</span></td></tr>
+          <tr><td class="day-num">Day 16</td><td class="topic">Big Unit 3 Test</td><td class="objectives">Comprehensive assessment: evolution, natural selection, classification, biodiversity</td><td><span class="tag tag-test">Unit Test</span></td></tr>
+          <tr><td class="day-num">Week 17</td><td class="topic">Final Exam</td><td class="objectives">Cumulative exam covering all 3 Big Units, with emphasis on graphing and CER skills</td><td><span class="tag tag-test">Final Exam</span></td></tr>
         </tbody>
       </table>
     </div>
-    <div class="section-title">Worksheets & Resources</div>
-    <div class="ws-grid">
-      <div class="ws-card"><div class="ws-icon">🧬</div><h4>Natural Selection Simulation Data Sheet</h4><p>Generational trial recording sheet, allele-frequency graph, and CER conclusion prompts.</p><a class="ws-btn" id="ws-btn-3-1" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">🦴</div><h4>Evidence for Evolution Analysis</h4><p>Fossil record, comparative anatomy, and molecular evidence data for interpretation.</p><a class="ws-btn" id="ws-btn-3-2" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">🗂</div><h4>Taxonomy Classification Organizer</h4><p>Nested hierarchy diagram from domain to species, with practice classification sets.</p><a class="ws-btn" id="ws-btn-3-3" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">📋</div><h4>Practice IA Project Guide</h4><p>Step-by-step guide and rubric matching the DP Internal Assessment format.</p><a class="ws-btn" id="ws-btn-3-4" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-      <div class="ws-card"><div class="ws-icon">📝</div><h4>Big Unit 3 + Final Exam Study Guide</h4><p>Cumulative review covering all 3 Big Units with key concepts and practice questions.</p><a class="ws-btn" id="ws-btn-3-5" href="#" target="_blank" onclick="return wsBtnClick(this)">Open / Print</a></div>
-    </div>
+    
+    
   </div>
 
 </main>
 
 <footer>
-  Grade 9 Biology &nbsp;·&nbsp; <span id="footer-school" data-editable contenteditable="false">[School Name]</span> &nbsp;·&nbsp; Academic Year 2026–2027 &nbsp;·&nbsp; Pre-IB course feeding into IB Diploma Programme Biology &nbsp;·&nbsp; All materials subject to revision by instructor.
+  Grade 9 Biology &nbsp;·&nbsp; <span id="footer-school">Washington International School</span> &nbsp;·&nbsp; Academic Year 2026–2027 &nbsp;·&nbsp; Pre-IB course feeding into IB Diploma Programme Biology &nbsp;·&nbsp; All materials subject to revision by instructor.
 </footer>
 
 <!-- ══════════════════════════════════════════
      WORKSHEET VIEWER (opens over the page)
 ══════════════════════════════════════════ -->
-<div id="ws-modal" onclick="if(event.target===this) closeWorksheet()">
-  <div class="ws-modal-bar">
-    <button class="ws-print" onclick="window.print()">🖨 Print / Save as PDF</button>
-    <button class="ws-close" onclick="closeWorksheet()">✕ Close</button>
-  </div>
-  <div class="ws-edit-note">✏️ Edit mode is on — click anywhere on this worksheet to change its text. Click ⬇ Download Page afterward to keep your changes.</div>
-  <div id="ws-modal-body"></div>
-</div>
+
 
 <!-- ══════════════════════════════════════════
      BUILT-IN WORKSHEET LIBRARY (hidden; shown in viewer)
 ══════════════════════════════════════════ -->
-<div id="ws-library">
 
-<!-- ───────── 1-1 Reaction Time ───────── -->
-<div class="wsd" id="doc-1-1">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 1 · Day 3 Lab</div>
-  <h1>Reaction Time Ruler Drop — Fair Test Report</h1>
-  <div class="who"><span>Name:</span><span>Partner(s):</span><span>Date:</span><span>Period:</span></div>
 
-  <div class="note"><b>How it works:</b> Your partner holds a 30 cm ruler vertically with the 0 cm mark level with the top of your open thumb and finger. Without warning, they drop it. Catch it as fast as you can and read the distance (cm) at the top of your thumb. Use the conversion table to turn distance into reaction time.</div>
 
-  <h2>1 · Research Question</h2>
-  <p>Does <span style="border-bottom:1px solid #1a1a18;display:inline-block;min-width:200px">&nbsp;</span> affect a person's reaction time?</p>
-  <p class="small">Ideas: dominant vs. non-dominant hand · eyes open vs. a sound cue · before vs. after 30 s of exercise · with vs. without distraction (counting backward).</p>
 
-  <h2>2 · Variables</h2>
-  <table class="wt">
-    <tr><th style="width:32%">Independent variable (what I change)</th><td class="blank"></td></tr>
-    <tr><th>Dependent variable (what I measure)</th><td class="blank"></td></tr>
-    <tr><th>Controlled variable 1 (and how)</th><td class="blank"></td></tr>
-    <tr><th>Controlled variable 2 (and how)</th><td class="blank"></td></tr>
-    <tr><th>Controlled variable 3 (and how)</th><td class="blank"></td></tr>
-  </table>
-
-  <h2>3 · Hypothesis</h2>
-  <p class="small">Use the form: <i>If … then … because …</i></p>
-  <div class="lines"></div>
-
-  <h2>4 · Method</h2>
-  <ol>
-    <li>Catcher sits with forearm resting on the table edge, hand open ~2 cm.</li>
-    <li>Dropper lines the 0 cm mark with the top of the catcher's thumb and drops at a random moment.</li>
-    <li>Record the catch distance to the nearest 0.5 cm. If the ruler is missed, repeat that trial.</li>
-    <li>Complete 5 trials for each condition of the independent variable.</li>
-  </ol>
-
-  <h2>5 · Raw Data</h2>
-  <table class="wt center">
-    <tr><th rowspan="2">Condition (IV)</th><th colspan="5">Catch distance (cm) ± 0.5 cm</th><th rowspan="2">Mean distance (cm)</th><th rowspan="2">Mean reaction time (s)</th></tr>
-    <tr><th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>T5</th></tr>
-    <tr><td class="blank"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td class="blank"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td class="blank"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-  </table>
-
-  <h3>Conversion Table — Distance to Reaction Time</h3>
-  <p class="small">Based on free fall: <i>t = √(2d ÷ g)</i>, where d is in metres and g = 9.81 m/s². For in-between values, estimate or use the formula.</p>
-  <table class="wt center">
-    <tr><th>Distance (cm)</th><td>5</td><td>10</td><td>15</td><td>20</td><td>25</td><td>30</td><td>35</td><td>40</td></tr>
-    <tr><th>Time (s)</th><td>0.10</td><td>0.14</td><td>0.17</td><td>0.20</td><td>0.23</td><td>0.25</td><td>0.27</td><td>0.29</td></tr>
-  </table>
-
-  <h2>6 · Graph</h2>
-  <p class="small">Bar graph of mean reaction time (s) for each condition. Title, labeled axes with units, even scale.</p>
-  <div class="graph"></div>
-  <div class="graph-labels"><span>Title:</span></div>
-  <div class="graph-labels"><span>x-axis:</span><span>y-axis:</span></div>
-
-  <h2>7 · CER Conclusion</h2>
-  <h3>Claim — Answer the research question in one sentence.</h3>
-  <div class="lines l2"></div>
-  <h3>Evidence — Quote specific numbers from your data (means, differences).</h3>
-  <div class="lines"></div>
-  <h3>Reasoning — Explain the biology (nervous system: eyes → brain → muscles) and why the data support your claim.</h3>
-  <div class="lines l4"></div>
-
-  <h2>8 · Evaluation</h2>
-  <p>a) Name one source of error and its effect on your results.</p>
-  <div class="lines l2"></div>
-  <p>b) Suggest one realistic improvement to make the test fairer.</p>
-  <div class="lines l2"></div>
-</div>
-
-<!-- ───────── 1-2 Cell Structure ───────── -->
-<div class="wsd" id="doc-1-2">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 1 · Days 4–10</div>
-  <h1>Cell Structure &amp; Organelle Diagrams</h1>
-  <div class="who"><span>Name:</span><span>Date:</span><span>Period:</span></div>
-
-  <h2>Part A · Prokaryotic Cell (Bacterium)</h2>
-  <svg class="svgfig" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans, sans-serif">
-    <line x1="170" y1="50" x2="160" y2="28" stroke="#555" stroke-width="2"/>
-    <line x1="300" y1="50" x2="304" y2="28" stroke="#555" stroke-width="2"/>
-    <line x1="360" y1="52" x2="372" y2="32" stroke="#555" stroke-width="2"/>
-    <rect x="110" y="50" width="300" height="100" rx="50" fill="#f3efe2" stroke="#555" stroke-width="3"/>
-    <rect x="118" y="58" width="284" height="84" rx="42" fill="none" stroke="#555" stroke-width="3"/>
-    <rect x="124" y="64" width="272" height="72" rx="36" fill="#fbfaf5" stroke="#888" stroke-width="2"/>
-    <path d="M200 100 q15 -25 30 0 t30 0 t30 0 t30 0" stroke="#7b2d00" stroke-width="2.5" fill="none"/>
-    <path d="M205 112 q12 14 24 0 t24 0 t24 0" stroke="#7b2d00" stroke-width="2.5" fill="none"/>
-    <circle cx="345" cy="88" r="10" fill="none" stroke="#7b2d00" stroke-width="2"/>
-    <g fill="#333"><circle cx="160" cy="90" r="3"/><circle cx="175" cy="115" r="3"/><circle cx="150" cy="105" r="3"/><circle cx="330" cy="118" r="3"/><circle cx="365" cy="112" r="3"/><circle cx="190" cy="80" r="3"/></g>
-    <path d="M410 100 q15 -18 30 0 t30 0 t30 0" stroke="#555" stroke-width="2" fill="none"/>
-    <g stroke="#1a1a18" stroke-width="1.2"><line x1="200" y1="150" x2="200" y2="176"/><line x1="260" y1="142" x2="260" y2="176"/><line x1="320" y1="136" x2="320" y2="176"/><line x1="230" y1="100" x2="230" y2="30"/><line x1="160" y1="90" x2="68" y2="60"/><line x1="345" y1="88" x2="400" y2="30"/><line x1="470" y1="100" x2="490" y2="66"/><line x1="160" y1="28" x2="130" y2="22"/></g>
-    <g fill="#1a1a18"><circle cx="200" cy="186" r="11"/><circle cx="260" cy="186" r="11"/><circle cx="320" cy="186" r="11"/><circle cx="230" cy="20" r="11"/><circle cx="58" cy="60" r="11"/><circle cx="408" cy="22" r="11"/><circle cx="494" cy="56" r="11"/><circle cx="120" cy="20" r="11"/></g>
-    <g fill="#fff" font-size="12" font-weight="700" text-anchor="middle"><text x="200" y="190">1</text><text x="260" y="190">2</text><text x="320" y="190">3</text><text x="230" y="24">4</text><text x="58" y="64">5</text><text x="408" y="26">6</text><text x="494" y="60">7</text><text x="120" y="24">8</text></g>
-  </svg>
-  <div class="bank"><b>Word bank:</b> ribosome · flagellum · cell membrane · plasmid · capsule · pilus · nucleoid (DNA) · cell wall</div>
-  <div class="two">
-    <ol><li>__________________</li><li>__________________</li><li>__________________</li><li>__________________</li></ol>
-    <ol start="5"><li>__________________</li><li>__________________</li><li>__________________</li><li>__________________</li></ol>
-  </div>
-
-  <h2>Part B · Animal Cell</h2>
-  <svg class="svgfig" viewBox="0 0 520 310" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans, sans-serif">
-    <ellipse cx="260" cy="150" rx="190" ry="120" fill="#fdf6ec" stroke="#555" stroke-width="3"/>
-    <circle cx="240" cy="140" r="50" fill="#e8dff5" stroke="#555" stroke-width="2.5"/>
-    <circle cx="250" cy="135" r="14" fill="#9b87c4"/>
-    <g stroke="#6b8fbf" stroke-width="3" fill="none"><path d="M298 105 q22 35 0 70"/><path d="M310 100 q26 40 0 80"/><path d="M322 96 q30 44 0 88"/></g>
-    <g fill="#333"><circle cx="306" cy="125" r="2.5"/><circle cx="321" cy="150" r="2.5"/><circle cx="334" cy="120" r="2.5"/><circle cx="336" cy="160" r="2.5"/><circle cx="309" cy="160" r="2.5"/></g>
-    <ellipse cx="385" cy="110" rx="32" ry="16" fill="#fbd5b5" stroke="#555" stroke-width="2"/>
-    <path d="M360 110 q6 -10 12 0 t12 0 t12 0 t12 0" stroke="#c0703a" stroke-width="2" fill="none"/>
-    <g transform="rotate(-20 160 215)"><ellipse cx="160" cy="215" rx="30" ry="14" fill="#fbd5b5" stroke="#555" stroke-width="2"/><path d="M137 215 q6 -9 11 0 t11 0 t11 0 t11 0" stroke="#c0703a" stroke-width="2" fill="none"/></g>
-    <g stroke="#c48a2a" stroke-width="4" stroke-linecap="round" fill="none"><path d="M250 228 q30 -14 60 0"/><path d="M252 236 q28 -12 56 0"/><path d="M255 244 q25 -10 50 0"/><path d="M258 252 q22 -8 44 0"/></g>
-    <circle cx="170" cy="90" r="12" fill="#f7c6c6" stroke="#555" stroke-width="1.5"/>
-    <g fill="#333"><circle cx="150" cy="140" r="3"/><circle cx="138" cy="156" r="3"/><circle cx="205" cy="240" r="3"/><circle cx="360" cy="215" r="3"/><circle cx="395" cy="160" r="3"/></g>
-    <g stroke="#1a1a18" stroke-width="1.2"><line x1="420" y1="85" x2="484" y2="56"/><line x1="205" y1="175" x2="48" y2="244"/><line x1="250" y1="135" x2="215" y2="22"/><line x1="405" y1="110" x2="472" y2="128"/><line x1="337" y1="140" x2="482" y2="226"/><line x1="280" y1="236" x2="298" y2="285"/><line x1="170" y1="90" x2="98" y2="38"/><line x1="150" y1="140" x2="40" y2="150"/></g>
-    <g fill="#1a1a18"><circle cx="490" cy="50" r="11"/><circle cx="40" cy="250" r="11"/><circle cx="215" cy="14" r="11"/><circle cx="482" cy="130" r="11"/><circle cx="490" cy="232" r="11"/><circle cx="300" cy="295" r="11"/><circle cx="90" cy="30" r="11"/><circle cx="30" cy="150" r="11"/></g>
-    <g fill="#fff" font-size="12" font-weight="700" text-anchor="middle"><text x="490" y="54">1</text><text x="40" y="254">2</text><text x="215" y="18">3</text><text x="482" y="134">4</text><text x="490" y="236">5</text><text x="300" y="299">6</text><text x="90" y="34">7</text><text x="30" y="154">8</text></g>
-  </svg>
-  <div class="bank"><b>Word bank:</b> Golgi apparatus · nucleolus · lysosome · cell membrane · ribosome · mitochondrion · nucleus · rough ER</div>
-  <div class="two">
-    <ol><li>__________________</li><li>__________________</li><li>__________________</li><li>__________________</li></ol>
-    <ol start="5"><li>__________________</li><li>__________________</li><li>__________________</li><li>__________________</li></ol>
-  </div>
-
-  <h2 class="pb">Part C · Plant Cell</h2>
-  <svg class="svgfig" viewBox="0 -10 520 330" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans, sans-serif">
-    <rect x="60" y="20" width="400" height="260" rx="10" fill="#cfe6c1" stroke="#3b6d2e" stroke-width="3"/>
-    <rect x="72" y="32" width="376" height="236" rx="6" fill="#f6fbf2" stroke="#555" stroke-width="2"/>
-    <rect x="200" y="60" width="220" height="170" rx="40" fill="#d6ecf7" stroke="#4a7fa6" stroke-width="2"/>
-    <circle cx="130" cy="100" r="34" fill="#e8dff5" stroke="#555" stroke-width="2"/>
-    <circle cx="135" cy="98" r="10" fill="#9b87c4"/>
-    <g fill="#7fb36a" stroke="#3b6d2e" stroke-width="1.5"><ellipse cx="110" cy="190" rx="26" ry="13"/><ellipse cx="115" cy="240" rx="26" ry="13"/><ellipse cx="300" cy="250" rx="26" ry="12"/></g>
-    <g stroke="#2f5a24" stroke-width="2"><line x1="98" y1="185" x2="98" y2="195"/><line x1="108" y1="185" x2="108" y2="195"/><line x1="118" y1="185" x2="118" y2="195"/><line x1="105" y1="235" x2="105" y2="245"/><line x1="115" y1="235" x2="115" y2="245"/><line x1="125" y1="235" x2="125" y2="245"/><line x1="290" y1="245" x2="290" y2="255"/><line x1="300" y1="245" x2="300" y2="255"/><line x1="310" y1="245" x2="310" y2="255"/></g>
-    <ellipse cx="180" cy="160" rx="18" ry="9" fill="#fbd5b5" stroke="#555" stroke-width="1.5"/>
-    <g stroke="#1a1a18" stroke-width="1.2"><line x1="60" y1="150" x2="30" y2="150"/><line x1="72" y1="60" x2="30" y2="60"/><line x1="330" y1="140" x2="484" y2="140"/><line x1="130" y1="66" x2="104" y2="8"/><line x1="135" y1="98" x2="196" y2="8"/><line x1="110" y1="190" x2="30" y2="214"/><line x1="180" y1="160" x2="200" y2="290"/><line x1="240" y1="255" x2="258" y2="290"/></g>
-    <g fill="#1a1a18"><circle cx="20" cy="150" r="11"/><circle cx="20" cy="60" r="11"/><circle cx="495" cy="140" r="11"/><circle cx="100" cy="0" r="11"/><circle cx="200" cy="0" r="11"/><circle cx="20" cy="218" r="11"/><circle cx="200" cy="300" r="11"/><circle cx="262" cy="300" r="11"/></g>
-    <g fill="#fff" font-size="12" font-weight="700" text-anchor="middle"><text x="20" y="154">1</text><text x="20" y="64">2</text><text x="495" y="144">3</text><text x="100" y="4">4</text><text x="200" y="4">5</text><text x="20" y="222">6</text><text x="200" y="304">7</text><text x="262" y="304">8</text></g>
-  </svg>
-  <div class="bank"><b>Word bank:</b> chloroplast · cytoplasm · cell wall · nucleolus · central vacuole · mitochondrion · nucleus · cell membrane</div>
-  <div class="two">
-    <ol><li>__________________</li><li>__________________</li><li>__________________</li><li>__________________</li></ol>
-    <ol start="5"><li>__________________</li><li>__________________</li><li>__________________</li><li>__________________</li></ol>
-  </div>
-
-  <h2>Part D · Organelle Function Table</h2>
-  <table class="wt">
-    <tr><th style="width:22%">Structure</th><th>Function</th><th style="width:11%">Prokaryote?</th><th style="width:11%">Animal?</th><th style="width:11%">Plant?</th></tr>
-    <tr><td>Cell membrane</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>Cell wall</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>Ribosome</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>Nucleus</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>Mitochondrion</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>Chloroplast</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>Rough ER</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>Golgi apparatus</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>Lysosome</td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>Large central vacuole</td><td></td><td></td><td></td><td></td></tr>
-  </table>
-
-  <h2>Part E · Cell Theory &amp; Endosymbiosis</h2>
-  <p>1. State the three tenets of cell theory.</p>
-  <p>a) ______________________________________________________________</p>
-  <p>b) ______________________________________________________________</p>
-  <p>c) ______________________________________________________________</p>
-  <p>2. Endosymbiotic theory proposes that mitochondria and chloroplasts were once free-living prokaryotes that were taken in by a larger cell. List <b>three</b> pieces of evidence that support this.</p>
-  <div class="lines"></div>
-  <p>3. How does endosymbiotic theory fit with the cell-theory idea that all cells come from pre-existing cells?</p>
-  <div class="lines"></div>
-  <p>4. Name two structures found in <b>all</b> cells and one structure found <b>only</b> in eukaryotic cells.</p>
-  <div class="lines l2"></div>
-</div>
-
-<!-- ───────── 1-3 Microscope ───────── -->
-<div class="wsd" id="doc-1-3">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 1 · Day 7 Lab</div>
-  <h1>Microscope Scale &amp; Size Data Sheet</h1>
-  <div class="who"><span>Name:</span><span>Partner(s):</span><span>Date:</span><span>Period:</span></div>
-
-  <h2>Key Ideas &amp; Formulas</h2>
-  <ul>
-    <li><b>Total magnification</b> = eyepiece magnification × objective magnification</li>
-    <li><b>1 mm = 1000 µm</b> (micrometres)</li>
-    <li><b>Estimated cell length</b> = field-of-view diameter ÷ number of cells that fit across it</li>
-    <li><b>Magnification</b> = image size ÷ actual size &nbsp;→&nbsp; <b>Actual size</b> = image size ÷ magnification (same units!)</li>
-  </ul>
-
-  <h2>Part A · Measure the Field of View (FOV)</h2>
-  <p>Place a clear ruler under the lowest objective and count the millimetre spaces across the circle. Higher-power FOVs are too small to measure directly, so calculate them:</p>
-  <p class="small">FOV<sub>high</sub> = FOV<sub>low</sub> × (magnification<sub>low</sub> ÷ magnification<sub>high</sub>)</p>
-  <table class="wt center">
-    <tr><th>Objective</th><th>Total magnification</th><th>FOV diameter (mm)</th><th>FOV diameter (µm)</th><th>How found?</th></tr>
-    <tr><td>4×</td><td class="blank"></td><td></td><td></td><td>measured</td></tr>
-    <tr><td>10×</td><td class="blank"></td><td></td><td></td><td>calculated</td></tr>
-    <tr><td>40×</td><td class="blank"></td><td></td><td></td><td>calculated</td></tr>
-  </table>
-
-  <h2>Part B · Estimate Cell Size (Onion Epidermis or Cheek Cells)</h2>
-  <p>Specimen: ______________________</p>
-  <table class="wt center">
-    <tr><th>Total magnification</th><th>FOV diameter (µm)</th><th># cells across FOV</th><th>Estimated cell length (µm)</th><th>Length of one cell in your drawing (mm)</th></tr>
-    <tr><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-  </table>
-
-  <div class="two">
-    <div><p><b>Drawing — low power</b> (× ____ )</p><div style="border:1.5px solid #1a1a18;border-radius:50%;aspect-ratio:1;max-width:2.6in"></div></div>
-    <div><p><b>Drawing — high power</b> (× ____ )</p><div style="border:1.5px solid #1a1a18;border-radius:50%;aspect-ratio:1;max-width:2.6in"></div></div>
-  </div>
-
-  <h2>Part C · Graph</h2>
-  <p class="small">Plot total magnification (x) vs. apparent size of one cell in your drawing (y). Draw a line of best fit.</p>
-  <div class="graph"></div>
-  <div class="graph-labels"><span>Title:</span></div>
-
-  <h2>Part D · Practice Calculations</h2>
-  <p>1. A microscope has a 10× eyepiece and a 40× objective. What is the total magnification?</p>
-  <div class="lines l2"></div>
-  <p>2. At 100×, the FOV is 1.8 mm. About 6 cells fit across. Estimate the length of one cell in µm.</p>
-  <div class="lines l2"></div>
-  <p>3. A drawing of a cell is 30 mm long. The real cell is 15 µm long. Calculate the magnification of the drawing.</p>
-  <div class="lines l2"></div>
-  <p>4. A photo of a bacterium at 5000× shows it 10 mm long. What is its actual length in µm?</p>
-  <div class="lines l2"></div>
-
-  <h2>Part E · Analysis</h2>
-  <p>1. Describe the relationship shown in your graph.</p>
-  <div class="lines l2"></div>
-  <p>2. Did the <i>estimated actual</i> cell length change between magnifications? Should it? Explain.</p>
-  <div class="lines"></div>
-  <p>3. Explain why the invention of the microscope was essential to the development of cell theory.</p>
-  <div class="lines"></div>
-</div>
-
-<!-- ───────── 1-4 Osmosis Lab ───────── -->
-<div class="wsd" id="doc-1-4">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 1 · Days 15–16 Lab</div>
-  <h1>Osmosis Lab Report — Potato Cores in Sucrose Solutions</h1>
-  <div class="who"><span>Name:</span><span>Partner(s):</span><span>Date:</span><span>Period:</span></div>
-
-  <div class="note">This report follows the <b>IMRaD</b> structure: <b>I</b>ntroduction, <b>M</b>ethods, <b>R</b>esults, <b>a</b>nd <b>D</b>iscussion. Egg variant: replace "potato core" with "de-shelled egg" and use water, corn syrup, and dilutions between.</div>
-
-  <h2>Introduction</h2>
-  <p><b>Research question:</b> How does the concentration of sucrose solution (0.0–1.0 mol/dm³) affect the percentage change in mass of potato cores after 24 hours?</p>
-  <p><b>Background:</b> Define osmosis and explain what hypotonic, isotonic and hypertonic mean for a plant cell.</p>
-  <div class="lines l4"></div>
-  <p><b>Hypothesis</b> (If … then … because …):</p>
-  <div class="lines"></div>
-  <table class="wt">
-    <tr><th style="width:30%">Independent variable</th><td>Sucrose concentration (mol/dm³): 0.0, 0.2, 0.4, 0.6, 0.8, 1.0</td></tr>
-    <tr><th>Dependent variable</th><td class="blank"></td></tr>
-    <tr><th>Controlled variables</th><td class="blank" style="height:52px"></td></tr>
-  </table>
-
-  <h2>Methods</h2>
-  <ol>
-    <li>Use a cork borer to cut 6 potato cores of equal diameter; trim each to 3.0 cm.</li>
-    <li>Blot each core dry and record its initial mass (g) on a balance (± 0.01 g).</li>
-    <li>Place one core in each labeled tube with 20 mL of the assigned solution.</li>
-    <li>After 24 hours, remove, blot dry the same way, and record final mass.</li>
-    <li>Pool class data to calculate a mean for each concentration.</li>
-  </ol>
-  <p><b>Safety / ethics note:</b> ________________________________________________</p>
-
-  <h2>Results</h2>
-  <table class="wt center">
-    <tr><th>Sucrose (mol/dm³)</th><th>Initial mass (g)</th><th>Final mass (g)</th><th>Change in mass (g)</th><th>% change in mass</th><th>Class mean % change</th></tr>
-    <tr><td>0.0</td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>0.2</td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>0.4</td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>0.6</td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>0.8</td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>1.0</td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-  </table>
-  <p class="small"><b>% change = (final − initial) ÷ initial × 100.</b> Show one worked example: ________________________________</p>
-
-  <p><b>Graph:</b> Sucrose concentration (x) vs. class mean % change in mass (y). Include the 0% line; values can be negative.</p>
-  <div class="graph"></div>
-  <div class="graph-labels"><span>Title:</span></div>
-  <p>Where does your line cross 0%? Estimated isotonic point = ________ mol/dm³</p>
-
-  <h2>Discussion (CER)</h2>
-  <h3>Claim</h3>
-  <div class="lines l2"></div>
-  <h3>Evidence — use data from your table and graph</h3>
-  <div class="lines"></div>
-  <h3>Reasoning — explain water movement by osmosis at low and high concentrations</h3>
-  <div class="lines l4"></div>
-  <h3>Evaluation</h3>
-  <table class="wt">
-    <tr><th style="width:50%">Limitation / source of error</th><th>Effect on results &amp; improvement</th></tr>
-    <tr><td class="blank" style="height:44px"></td><td></td></tr>
-    <tr><td class="blank" style="height:44px"></td><td></td></tr>
-  </table>
-</div>
-
-<!-- ───────── 1-5 Unit 1 Study Guide ───────── -->
-<div class="wsd" id="doc-1-5">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 1 · Day 22 Review</div>
-  <h1>Big Unit 1 Study Guide — Cell Biology &amp; Life Processes</h1>
-  <div class="who"><span>Name:</span><span>Test date:</span><span>Period:</span></div>
-  <p class="small">Check off each objective when you can do it without notes. ☐ = not yet · ✓ = got it</p>
-
-  <h2>Unit Objectives (27)</h2>
-  <h3>Nature of Science &amp; Lab Skills</h3>
-  <ol>
-    <li>☐ Outline the steps of the scientific method.</li>
-    <li>☐ Distinguish independent, dependent, and controlled variables.</li>
-    <li>☐ Describe safe, accurate use of lab equipment, including the microscope.</li>
-    <li>☐ Distinguish accuracy from precision.</li>
-    <li>☐ Construct a data table and graph with titles, labeled axes, and units.</li>
-    <li>☐ Write a Claim–Evidence–Reasoning (CER) conclusion.</li>
-  </ol>
-  <h3>Cell Structure &amp; Function</h3>
-  <ol start="7">
-    <li>☐ Compare prokaryotic and eukaryotic cells.</li>
-    <li>☐ Describe the structure and function of the parts of prokaryotic and eukaryotic cells.</li>
-    <li>☐ State the three tenets of cell theory.</li>
-    <li>☐ Describe endosymbiotic theory and the evidence for it.</li>
-    <li>☐ Discuss the importance of the invention of the microscope to biology.</li>
-    <li>☐ Calculate total magnification, FOV, and actual size.</li>
-    <li>☐ Briefly outline what a virus is and how it infects a cell.</li>
-    <li>☐ Outline the debate over whether viruses are alive; distinguish replication from reproduction.</li>
-    <li>☐ Compare plant and animal cell structures.</li>
-    <li>☐ Identify the major organelles and their functions.</li>
-  </ol>
-  <h3>Cell Transport &amp; Homeostasis</h3>
-  <ol start="17">
-    <li>☐ Define diffusion.</li>
-    <li>☐ Define osmosis and predict the direction of water movement.</li>
-    <li>☐ Distinguish hypertonic, hypotonic, and isotonic solutions and predict cell behavior in each.</li>
-    <li>☐ Describe active transport and how it differs from passive transport.</li>
-    <li>☐ Explain selective permeability of the cell membrane.</li>
-    <li>☐ Calculate and interpret percentage change in mass.</li>
-    <li>☐ Define homeostasis and explain its importance to a living cell.</li>
-  </ol>
-  <h3>Energy in Cells</h3>
-  <ol start="24">
-    <li>☐ Outline the inputs and outputs of photosynthesis.</li>
-    <li>☐ Outline the inputs and outputs of cellular respiration.</li>
-    <li>☐ Describe ATP as the cell's energy currency.</li>
-    <li>☐ Identify limiting factors of photosynthesis (light, CO₂, temperature).</li>
-  </ol>
-
-  <h2>Key Vocabulary</h2>
-  <div class="three small" style="font-size:12px;color:#1a1a18">
-    <div>hypothesis<br>independent variable<br>dependent variable<br>controlled variable<br>accuracy<br>precision<br>prokaryote<br>eukaryote<br>nucleoid</div>
-    <div>organelle<br>cell theory<br>endosymbiosis<br>magnification<br>resolution<br>virus<br>capsid<br>host cell<br>selectively permeable</div>
-    <div>diffusion<br>osmosis<br>hypertonic / hypotonic / isotonic<br>active transport<br>homeostasis<br>photosynthesis<br>cellular respiration<br>ATP<br>limiting factor</div>
-  </div>
-
-  <h2>Sample Test Questions</h2>
-  <ol>
-    <li>A student tests whether temperature affects how fast yeast produces gas. Identify the IV, DV, and two controlled variables.</li>
-    <li>Four measurements of a 10.0 g mass read 8.1, 8.0, 8.1, 8.0 g. Are they accurate, precise, both, or neither? Explain.</li>
-    <li>Give two differences between a bacterium and a plant cell.</li>
-    <li>A cell drawing is 40 mm long at 400× magnification. Calculate the actual size in µm.</li>
-    <li>Explain why a virus is not usually classified as a living cell.</li>
-    <li>A red blood cell is placed in distilled water. Predict and explain what happens.</li>
-    <li>Explain why active transport requires ATP but diffusion does not.</li>
-    <li>A potato core changes from 2.50 g to 2.20 g. Calculate the % change in mass.</li>
-    <li>Write the word equations for photosynthesis and cellular respiration. How are they related?</li>
-    <li>In the Elodea lab, the bubble rate stopped increasing as the lamp moved very close. Suggest a limiting factor that explains this.</li>
-  </ol>
-  <div class="lines l6"></div>
-</div>
-
-<!-- ───────── 2-1 Food Web ───────── -->
-<div class="wsd" id="doc-2-1">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 2 · Days 2–3</div>
-  <h1>Food Web &amp; Energy Pyramid Worksheet</h1>
-  <div class="who"><span>Name:</span><span>Date:</span><span>Period:</span></div>
-
-  <h2>Part A · Meadow Ecosystem Organisms</h2>
-  <table class="wt">
-    <tr><th style="width:20%">Organism</th><th>What it eats</th><th style="width:28%">Role (producer / consumer level / decomposer)</th></tr>
-    <tr><td>Grass</td><td>— (makes its own food)</td><td></td></tr>
-    <tr><td>Clover</td><td>— (makes its own food)</td><td></td></tr>
-    <tr><td>Grasshopper</td><td>grass</td><td></td></tr>
-    <tr><td>Rabbit</td><td>grass, clover</td><td></td></tr>
-    <tr><td>Mouse</td><td>grass seeds, clover, grasshoppers</td><td></td></tr>
-    <tr><td>Sparrow</td><td>grasshoppers, grass seeds</td><td></td></tr>
-    <tr><td>Snake</td><td>mice, sparrows</td><td></td></tr>
-    <tr><td>Fox</td><td>rabbits, mice</td><td></td></tr>
-    <tr><td>Hawk</td><td>snakes, mice, rabbits, sparrows</td><td></td></tr>
-    <tr><td>Fungi &amp; bacteria</td><td>dead remains and wastes of all organisms</td><td></td></tr>
-  </table>
-
-  <h2>Part B · Build the Food Web</h2>
-  <p>Draw the food web below. Arrows point <b>from the food to the eater</b> (the direction energy flows). Producers go at the bottom.</p>
-  <div style="border:1.5px solid #1a1a18;border-radius:6px;height:3.6in;margin:6px 0 12px"></div>
-
-  <h2>Part C · Interpreting the Web</h2>
-  <p>1. Write one food chain with four links.</p>
-  <div class="lines l2"></div>
-  <p>2. Which organism is an <b>omnivore</b>? How do you know?</p>
-  <div class="lines l2"></div>
-  <p>3. Name an organism that is both a secondary <i>and</i> tertiary consumer, depending on the food chain.</p>
-  <div class="lines l2"></div>
-  <p>4. A disease kills most of the snakes. Predict the effect on (a) the mouse population and (b) the clover. Explain.</p>
-  <div class="lines"></div>
-  <p>5. What would happen to the ecosystem without fungi and bacteria?</p>
-  <div class="lines l2"></div>
-
-  <h2>Part D · The 10% Rule</h2>
-  <div class="note">On average, only about <b>10%</b> of the energy at one trophic level is passed on to the next. The other ~90% is used for life processes (respiration, movement) or lost as heat and waste.</div>
-  <p>The producers in this meadow capture <b>20,000 kJ</b> of energy per square metre per year. Complete the table.</p>
-  <table class="wt center">
-    <tr><th>Trophic level</th><th>Example organism</th><th>Energy available (kJ/m²/yr)</th></tr>
-    <tr><td>Producers</td><td>grass</td><td>20,000</td></tr>
-    <tr><td>Primary consumers</td><td class="blank"></td><td></td></tr>
-    <tr><td>Secondary consumers</td><td class="blank"></td><td></td></tr>
-    <tr><td>Tertiary consumers</td><td class="blank"></td><td></td></tr>
-  </table>
-
-  <h3>Draw the energy pyramid (label each level with organism and kJ)</h3>
-  <div style="border:1.5px solid #1a1a18;border-radius:6px;height:2.8in;margin:6px 0 12px"></div>
-
-  <p>6. What percentage of the producers' energy reaches the tertiary consumers?</p>
-  <div class="lines l2"></div>
-  <p>7. Use the 10% rule to explain why food chains rarely have more than 4–5 links.</p>
-  <div class="lines"></div>
-  <p>8. Is it more energy-efficient for humans to eat grain or to eat beef from cattle that ate grain? Explain using trophic levels.</p>
-  <div class="lines"></div>
-</div>
-
-<!-- ───────── 2-2 Quadrat ───────── -->
-<div class="wsd" id="doc-2-2">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 2 · Days 5–6 Lab</div>
-  <h1>Quadrat Sampling Data Sheet</h1>
-  <div class="who"><span>Name:</span><span>Group:</span><span>Date:</span><span>Period:</span></div>
-
-  <h2>Set-Up</h2>
-  <table class="wt">
-    <tr><th style="width:34%">Study site (field or simulated)</th><td class="blank"></td></tr>
-    <tr><th>Total area of study site (m²)</th><td class="blank"></td></tr>
-    <tr><th>Quadrat size</th><td>0.5 m × 0.5 m = <b>0.25 m²</b> (or: __________ )</td></tr>
-    <tr><th>How were quadrat positions chosen?</th><td>☐ Random number coordinates &nbsp; ☐ Transect every ____ m &nbsp; ☐ Other: ________</td></tr>
-  </table>
-  <div class="note">Random placement matters: if you choose spots that "look interesting," your sample is biased. Use a random number generator for x and y coordinates on a grid.</div>
-
-  <h2>Raw Data — Count of Individuals per Quadrat</h2>
-  <table class="wt center">
-    <tr><th>Quadrat #</th><th>x, y</th><th>Species A:<br>________</th><th>Species B:<br>________</th><th>Species C:<br>________</th><th>Species D:<br>________</th><th>Species E:<br>________</th></tr>
-    <tr><td>1</td><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>2</td><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>3</td><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>4</td><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>5</td><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>6</td><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>7</td><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>8</td><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>9</td><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>10</td><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><th>Total</th><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><th>Mean per quadrat</th><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><th>Density (per m²)</th><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-    <tr><th>Est. population of site</th><td></td><td class="blank"></td><td></td><td></td><td></td><td></td></tr>
-  </table>
-  <div class="note"><b>Formulas</b><br>Mean per quadrat = total ÷ number of quadrats<br>Density = mean per quadrat ÷ quadrat area (m²)<br>Estimated population = density × total site area (m²)<br><b>Worked example:</b> 30 dandelions in 10 quadrats of 0.25 m² → mean = 3.0 → density = 3.0 ÷ 0.25 = 12 per m² → in a 200 m² field ≈ 2,400 dandelions.</div>
-
-  <h2>Graph</h2>
-  <p class="small">Bar graph of density (individuals per m²) for each species.</p>
-  <div class="graph"></div>
-  <div class="graph-labels"><span>Title:</span></div>
-
-  <h2>Analysis &amp; CER</h2>
-  <p>1. Which species is most abundant? Least abundant?</p>
-  <div class="lines l2"></div>
-  <p>2. <b>Claim:</b> Estimate the population of your most abundant species across the whole site.</p>
-  <div class="lines l2"></div>
-  <p>3. <b>Evidence:</b> Show your calculation.</p>
-  <div class="lines"></div>
-  <p>4. <b>Reasoning:</b> Why can a sample of small quadrats represent the whole site? What assumptions are you making?</p>
-  <div class="lines"></div>
-
-  <h2>Sampling Error Discussion</h2>
-  <p>5. Compare your estimate with another group's. Why might they differ?</p>
-  <div class="lines l2"></div>
-  <p>6. How would using 20 quadrats instead of 10 change the reliability of your estimate? Explain.</p>
-  <div class="lines l2"></div>
-  <p>7. Some plants were on the edge of the quadrat. What rule did you use, and why does it matter?</p>
-  <div class="lines l2"></div>
-  <p>8. Quadrats work for plants and slow-moving animals. Why wouldn't they work for rabbits or birds?</p>
-  <div class="lines l2"></div>
-</div>
-
-<!-- ───────── 2-3 Population Growth ───────── -->
-<div class="wsd" id="doc-2-3">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 2 · Days 7–8, 11</div>
-  <h1>Population Growth Graphing Activity</h1>
-  <div class="who"><span>Name:</span><span>Date:</span><span>Period:</span></div>
-
-  <h2>Key Ideas</h2>
-  <div class="two">
-    <div class="note" style="margin:0"><b>Exponential growth (J-curve)</b><br>Resources are unlimited, so the population grows faster and faster — it keeps multiplying by the same factor.</div>
-    <div class="note" style="margin:0"><b>Logistic growth (S-curve)</b><br>Growth slows as resources run low and levels off at the <b>carrying capacity (K)</b> — the largest population the environment can support.</div>
-  </div>
-
-  <h2>Data Set 1 · Bacteria in Fresh Nutrient Broth</h2>
-  <table class="wt center">
-    <tr><th>Time (min)</th><td>0</td><td>20</td><td>40</td><td>60</td><td>80</td><td>100</td><td>120</td></tr>
-    <tr><th>Number of cells</th><td>100</td><td>200</td><td>400</td><td>800</td><td>1,600</td><td>3,200</td><td>6,400</td></tr>
-  </table>
-  <div class="graph" style="height:2.8in"></div>
-  <div class="graph-labels"><span>Title:</span></div>
-  <p>1. What type of growth is shown? How can you tell from the numbers alone?</p>
-  <div class="lines l2"></div>
-  <p>2. How long does it take the population to double? Predict the number of cells at 140 min.</p>
-  <div class="lines l2"></div>
-  <p>3. Can this pattern continue forever? Explain what will eventually happen.</p>
-  <div class="lines l2"></div>
-
-  <h2>Data Set 2 · Yeast in a Flask of Sugar Solution</h2>
-  <table class="wt center">
-    <tr><th>Time (h)</th><td>0</td><td>2</td><td>4</td><td>6</td><td>8</td><td>10</td><td>12</td><td>14</td><td>16</td><td>18</td><td>20</td></tr>
-    <tr><th>Cells (thousands/mL)</th><td>10</td><td>18</td><td>35</td><td>70</td><td>135</td><td>240</td><td>360</td><td>440</td><td>480</td><td>495</td><td>500</td></tr>
-  </table>
-  <div class="graph" style="height:2.8in"></div>
-  <div class="graph-labels"><span>Title:</span></div>
-  <p>4. On your graph, label the <b>lag/slow start</b>, <b>rapid (exponential) growth</b>, <b>slowing growth</b>, and <b>stationary (plateau)</b> phases.</p>
-  <p>5. Estimate the carrying capacity. Mark it on the graph with a dashed line labeled K.</p>
-  <div class="lines l2"></div>
-  <p>6. Between which two times was the population growing fastest? Use data to support your answer.</p>
-  <div class="lines l2"></div>
-  <p>7. Name two <b>limiting factors</b> that could cause the yeast population to level off.</p>
-  <div class="lines l2"></div>
-  <p>8. If the experiment ran for 40 more hours with no new sugar, sketch (with a dotted line) and explain what would likely happen.</p>
-  <div class="lines"></div>
-
-  <h2>Part 3 · Sketch &amp; Compare</h2>
-  <div class="two">
-    <div><p><b>Sketch a J-curve</b> (label axes)</p><div style="border:1.5px solid #1a1a18;height:1.8in"></div></div>
-    <div><p><b>Sketch an S-curve</b> (label axes and K)</p><div style="border:1.5px solid #1a1a18;height:1.8in"></div></div>
-  </div>
-  <p style="margin-top:10px">9. Deer are introduced to an island with no predators. Describe how their population would likely change over 30 years.</p>
-  <div class="lines"></div>
-</div>
-
-<!-- ───────── 2-4 Symbiosis & Succession ───────── -->
-<div class="wsd" id="doc-2-4">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 2 · Days 9–10</div>
-  <h1>Symbiosis &amp; Succession Sorting Activity</h1>
-  <div class="who"><span>Name:</span><span>Group:</span><span>Date:</span><span>Period:</span></div>
-
-  <h2>Part A · Symbiosis Card Sort</h2>
-  <p><b>Directions:</b> Cut out the 12 cards along the dashed lines. Sort them into three groups, then record your answers in the table.</p>
-  <table class="wt center">
-    <tr><th>Relationship</th><th>Species 1</th><th>Species 2</th></tr>
-    <tr><td><b>Mutualism</b></td><td>+ benefits</td><td>+ benefits</td></tr>
-    <tr><td><b>Commensalism</b></td><td>+ benefits</td><td>0 unaffected</td></tr>
-    <tr><td><b>Parasitism</b></td><td>+ benefits</td><td>− harmed</td></tr>
-  </table>
-  <div class="cards">
-    <div><b>CARD 1</b>Clownfish shelter among a sea anemone's stinging tentacles; the clownfish's waste feeds the anemone and it chases off fish that eat anemones.</div>
-    <div><b>CARD 2</b>A tick attaches to a dog's skin and feeds on its blood, which can spread disease.</div>
-    <div><b>CARD 3</b>Barnacles attach to a whale's skin and are carried to food-rich waters. The whale is not noticeably affected.</div>
-    <div><b>CARD 4</b>Bees collect nectar from flowers and carry pollen between them, helping the plants reproduce.</div>
-    <div><b>CARD 5</b>A tapeworm lives in a mammal's intestine and absorbs digested nutrients from its host.</div>
-    <div><b>CARD 6</b>Cattle egrets follow grazing cattle and eat the insects stirred up from the grass.</div>
-    <div><b>CARD 7</b>In a lichen, a fungus provides shelter and water for an alga, and the alga makes sugar by photosynthesis for the fungus.</div>
-    <div><b>CARD 8</b>Mistletoe grows into a tree's branches and draws water and nutrients from it.</div>
-    <div><b>CARD 9</b>A hermit crab lives in an empty shell left behind by a dead snail.</div>
-    <div><b>CARD 10</b>Mycorrhizal fungi wrap around plant roots, helping them absorb water and minerals in exchange for sugars.</div>
-    <div><b>CARD 11</b>Head lice live on a person's scalp and feed on small amounts of blood, causing itching.</div>
-    <div><b>CARD 12</b>Bacteria in the human gut get food and a home, and help us digest fiber and make vitamin K.</div>
-  </div>
-  <table class="wt">
-    <tr><th style="width:22%">Mutualism</th><td>Cards: </td></tr>
-    <tr><th>Commensalism</th><td>Cards: </td></tr>
-    <tr><th>Parasitism</th><td>Cards: </td></tr>
-  </table>
-  <p>1. Why does a parasite usually not kill its host quickly?</p>
-  <div class="lines l2"></div>
-  <p>2. Choose one card. If the relationship ended, how would each species be affected?</p>
-  <div class="lines l2"></div>
-
-  <h2 class="pb">Part B · Succession Card Sort</h2>
-  <p><b>Directions:</b> Cut out the cards. Build <b>two</b> sequences — one for <b>primary</b> succession and one for <b>secondary</b> succession. Some cards belong in both.</p>
-  <div class="cards">
-    <div><b>CARD P</b>Bare rock is left after a lava flow cools or a glacier retreats. There is no soil.</div>
-    <div><b>CARD Q</b>Tall, shade-tolerant trees such as oak and hickory dominate a stable <b>climax community</b>.</div>
-    <div><b>CARD R</b>Lichens and mosses (pioneer species) colonize the surface and begin breaking it down.</div>
-    <div><b>CARD S</b>Shrubs and bushes grow, shading out some of the smaller plants.</div>
-    <div><b>CARD T</b>A forest fire burns the trees, but the soil and many seeds and roots survive.</div>
-    <div><b>CARD U</b>Grasses, wildflowers, and fast-growing weeds sprout quickly in the open sunlight.</div>
-    <div><b>CARD V</b>Dead pioneer organisms and weathered rock mix to form a thin layer of soil.</div>
-    <div><b>CARD W</b>Fast-growing, sun-loving trees such as pine and birch move in.</div>
-    <div><b>CARD X</b>A farmer abandons a plowed field; the soil remains.</div>
-  </div>
-  <table class="wt">
-    <tr><th style="width:22%">Primary succession</th><td class="blank">Order:</td></tr>
-    <tr><th>Secondary succession</th><td class="blank">Order:</td></tr>
-  </table>
-  <p>3. What is the key difference between primary and secondary succession?</p>
-  <div class="lines l2"></div>
-  <p>4. Why is secondary succession usually much faster than primary succession?</p>
-  <div class="lines l2"></div>
-  <p>5. What role do pioneer species play? Why are they important?</p>
-  <div class="lines l2"></div>
-</div>
-
-<!-- ───────── 2-5 Unit 2 Study Guide ───────── -->
-<div class="wsd" id="doc-2-5">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 2 · Day 13 Review</div>
-  <h1>Big Unit 2 Study Guide — Ecology &amp; Populations</h1>
-  <div class="who"><span>Name:</span><span>Test date:</span><span>Period:</span></div>
-  <p class="small">Check off each objective when you can do it without notes. ☐ = not yet · ✓ = got it</p>
-
-  <h2>Unit Objectives (11)</h2>
-  <ol>
-    <li>☐ Distinguish between biotic and abiotic factors in an ecosystem.</li>
-    <li>☐ Define producers, consumers, and decomposers and give an example of each.</li>
-    <li>☐ Construct and interpret a food web.</li>
-    <li>☐ Apply the 10% rule to calculate energy transfer between trophic levels.</li>
-    <li>☐ Construct an energy pyramid from data.</li>
-    <li>☐ Compare biome types in terms of climate and characteristic organisms.</li>
-    <li>☐ Use quadrat sampling to estimate population density and discuss sampling error.</li>
-    <li>☐ Distinguish exponential and logistic population growth.</li>
-    <li>☐ Define carrying capacity and identify the phase of a population growth graph.</li>
-    <li>☐ Distinguish mutualism, commensalism, and parasitism with examples.</li>
-    <li>☐ Outline the process of succession, distinguishing primary from secondary.</li>
-  </ol>
-
-  <h2>Key Vocabulary</h2>
-  <div class="three" style="font-size:12px">
-    <div>ecosystem<br>biotic factor<br>abiotic factor<br>producer (autotroph)<br>consumer (heterotroph)<br>decomposer<br>trophic level</div>
-    <div>food chain / food web<br>energy pyramid<br>biome<br>population<br>community<br>quadrat<br>density</div>
-    <div>exponential growth<br>logistic growth<br>carrying capacity (K)<br>limiting factor<br>symbiosis<br>pioneer species<br>climax community</div>
-  </div>
-
-  <h2>Biome Quick Reference — complete the table</h2>
-  <table class="wt">
-    <tr><th>Biome</th><th>Temperature</th><th>Precipitation</th><th>Example organisms</th></tr>
-    <tr><td>Tropical rainforest</td><td class="blank"></td><td></td><td></td></tr>
-    <tr><td>Desert</td><td class="blank"></td><td></td><td></td></tr>
-    <tr><td>Temperate deciduous forest</td><td class="blank"></td><td></td><td></td></tr>
-    <tr><td>Grassland / savanna</td><td class="blank"></td><td></td><td></td></tr>
-    <tr><td>Taiga (boreal forest)</td><td class="blank"></td><td></td><td></td></tr>
-    <tr><td>Tundra</td><td class="blank"></td><td></td><td></td></tr>
-  </table>
-
-  <h2>Sample Test Questions</h2>
-  <ol>
-    <li>Classify each as biotic or abiotic: sunlight, earthworm, soil pH, mold, rainfall, fallen leaves.</li>
-    <li>In a pond, algae capture 50,000 kJ. How much energy reaches the fish that eat insect larvae that eat the algae?</li>
-    <li>Explain why there are fewer hawks than mice in a meadow.</li>
-    <li>Ten 1 m² quadrats contain a total of 45 daisies. The field is 500 m². Estimate the daisy population.</li>
-    <li>Give one reason a quadrat estimate might be inaccurate and one way to improve it.</li>
-    <li>Sketch a logistic growth curve. Label the carrying capacity and the phase of fastest growth.</li>
-    <li>Name two density-dependent limiting factors.</li>
-    <li>Remoras attach to sharks and eat their leftover scraps. Which type of symbiosis is this? Justify.</li>
-    <li>A forest is cleared for farming and later abandoned. Describe the stages of succession that follow.</li>
-    <li>Explain how removing a top predator could change an entire food web.</li>
-  </ol>
-  <div class="lines l6"></div>
-</div>
-
-<!-- ───────── 3-1 Natural Selection Sim ───────── -->
-<div class="wsd" id="doc-3-1">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 3 · Days 4–5 Lab</div>
-  <h1>Natural Selection Simulation Data Sheet</h1>
-  <div class="who"><span>Name:</span><span>Group:</span><span>Date:</span><span>Period:</span></div>
-
-  <div class="note"><b>The model:</b> Paper-punch "moths" in two colors live on a patterned background (newspaper or colored fabric). One student is the bird predator. Each round, the predator picks up moths one at a time for <b>15 seconds</b>. Every surviving moth then "reproduces" — add one new moth of the same color for each survivor. Color is controlled by a gene, so the share of each color shows how the <b>allele frequency</b> changes.</div>
-
-  <h2>Set-Up</h2>
-  <table class="wt">
-    <tr><th style="width:34%">Background used</th><td class="blank"></td></tr>
-    <tr><th>Moth color 1 (camouflaged?)</th><td class="blank"></td></tr>
-    <tr><th>Moth color 2 (camouflaged?)</th><td class="blank"></td></tr>
-    <tr><th>Starting population</th><td>20 of each color (40 total)</td></tr>
-  </table>
-  <p><b>Prediction:</b> After 4 generations, which color will be more common, and why?</p>
-  <div class="lines l2"></div>
-
-  <h2>Data Table</h2>
-  <table class="wt center">
-    <tr><th rowspan="2">Generation</th><th colspan="3">Color 1: ________</th><th colspan="3">Color 2: ________</th><th rowspan="2">Total at start</th><th rowspan="2">% Color 1</th><th rowspan="2">% Color 2</th></tr>
-    <tr><th>Start</th><th>Eaten</th><th>Survivors</th><th>Start</th><th>Eaten</th><th>Survivors</th></tr>
-    <tr><td>0</td><td>20</td><td></td><td></td><td>20</td><td></td><td></td><td>40</td><td>50%</td><td>50%</td></tr>
-    <tr><td>1</td><td class="blank"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>2</td><td class="blank"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>3</td><td class="blank"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>4</td><td class="blank"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-  </table>
-  <p class="small">Start of next generation = survivors × 2. &nbsp; % Color 1 = Color 1 start ÷ total at start × 100.</p>
-
-  <h2>Graph</h2>
-  <p class="small">Line graph: generation (x) vs. % of each color (y, 0–100%). Plot both colors on the same axes with a key.</p>
-  <div class="graph"></div>
-  <div class="graph-labels"><span>Title:</span></div>
-
-  <h2>Analysis</h2>
-  <p>1. Describe the trend for each color over the generations.</p>
-  <div class="lines l2"></div>
-  <p>2. Identify each part of natural selection in this model:</p>
-  <table class="wt">
-    <tr><th style="width:30%">Variation</th><td class="blank"></td></tr>
-    <tr><th>Inheritance</th><td class="blank"></td></tr>
-    <tr><th>Selective pressure</th><td class="blank"></td></tr>
-    <tr><th>Differential survival &amp; reproduction</th><td class="blank"></td></tr>
-  </table>
-  <p>3. Did any individual moth <i>change</i> color? So what actually evolved?</p>
-  <div class="lines l2"></div>
-  <p>4. Predict what would happen if the background changed to a color matching the other moths.</p>
-  <div class="lines l2"></div>
-
-  <h2>CER Conclusion</h2>
-  <p><b>Question:</b> How does camouflage affect the frequency of a trait in a population over generations?</p>
-  <h3>Claim</h3><div class="lines l2"></div>
-  <h3>Evidence</h3><div class="lines"></div>
-  <h3>Reasoning</h3><div class="lines l4"></div>
-  <p><b>Model limitation:</b> Give one way this simulation is different from real natural selection.</p>
-  <div class="lines l2"></div>
-</div>
-
-<!-- ───────── 3-2 Evidence for Evolution ───────── -->
-<div class="wsd" id="doc-3-2">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 3 · Day 1</div>
-  <h1>Evidence for Evolution — Data Analysis</h1>
-  <div class="who"><span>Name:</span><span>Date:</span><span>Period:</span></div>
-
-  <h2>Station 1 · The Fossil Record (Horse Evolution)</h2>
-  <table class="wt">
-    <tr><th>Genus</th><th>Lived (million years ago)</th><th>Shoulder height</th><th>Toes on front foot</th><th>Teeth</th><th>Habitat</th></tr>
-    <tr><td><i>Hyracotherium</i> (Eohippus)</td><td>~55</td><td>~0.4 m</td><td>4</td><td>low-crowned, for soft leaves</td><td>forest</td></tr>
-    <tr><td><i>Mesohippus</i></td><td>~35</td><td>~0.6 m</td><td>3</td><td>low-crowned</td><td>forest edge</td></tr>
-    <tr><td><i>Merychippus</i></td><td>~15</td><td>~1.0 m</td><td>3 (side toes small)</td><td>high-crowned, for grinding</td><td>grassland</td></tr>
-    <tr><td><i>Equus</i> (modern horse)</td><td>~4 to present</td><td>~1.6 m</td><td>1 (hoof)</td><td>high-crowned, for grinding grass</td><td>open grassland</td></tr>
-  </table>
-  <p class="small">Values are approximate and simplified for classroom use.</p>
-  <p>1. Describe two trends in horse anatomy over time.</p>
-  <div class="lines l2"></div>
-  <p>2. As forests gave way to open grasslands, how might a single hoof and longer legs have been an advantage?</p>
-  <div class="lines l2"></div>
-  <p>3. Why are high-crowned teeth an adaptation to eating grass?</p>
-  <div class="lines l2"></div>
-  <p>4. The fossil record has gaps. Give one reason why most organisms never become fossils.</p>
-  <div class="lines l2"></div>
-
-  <h2>Station 2 · Comparative Anatomy</h2>
-  <p>The forelimbs of a <b>human</b> (arm), <b>cat</b> (front leg), <b>whale</b> (flipper), and <b>bat</b> (wing) all contain the same set of bones — humerus, radius and ulna, carpals, metacarpals, and phalanges — even though they do very different jobs.</p>
-  <table class="wt">
-    <tr><th>Organism</th><th>Function of forelimb</th><th>How the bones are modified</th></tr>
-    <tr><td>Human</td><td class="blank"></td><td></td></tr>
-    <tr><td>Cat</td><td class="blank"></td><td></td></tr>
-    <tr><td>Whale</td><td class="blank"></td><td></td></tr>
-    <tr><td>Bat</td><td class="blank"></td><td></td></tr>
-  </table>
-  <p>5. These are <b>homologous structures</b>. What do they suggest about the ancestry of these animals?</p>
-  <div class="lines l2"></div>
-  <p>6. A bird wing and a butterfly wing both allow flight but have completely different structures. What are these called, and do they show close common ancestry? Explain.</p>
-  <div class="lines l2"></div>
-  <p>7. Whales have tiny, unused hip bones. What is this type of structure called, and what does it suggest?</p>
-  <div class="lines l2"></div>
-
-  <h2>Station 3 · Molecular Evidence (Cytochrome c)</h2>
-  <p>Cytochrome c is a protein used in cellular respiration by nearly all eukaryotes. The table shows the number of amino acids that differ from the <b>human</b> version (104 amino acids long).</p>
-  <table class="wt center">
-    <tr><th>Organism</th><td>Chimpanzee</td><td>Rhesus monkey</td><td>Dog</td><td>Horse</td><td>Chicken</td><td>Tuna</td><td>Yeast</td></tr>
-    <tr><th>Differences from human</th><td>0</td><td>1</td><td>11</td><td>12</td><td>13</td><td>21</td><td>~44</td></tr>
-  </table>
-  <p class="small">Values are commonly cited approximations.</p>
-  <p class="small">Bar graph: organism (x) vs. number of amino acid differences (y).</p>
-  <div class="graph" style="height:2.6in"></div>
-  <p>8. Which organism is most closely related to humans? Least closely related? Explain your reasoning.</p>
-  <div class="lines l2"></div>
-  <p>9. Why is it significant that yeast — a fungus — has cytochrome c at all?</p>
-  <div class="lines l2"></div>
-
-  <h2>Synthesis</h2>
-  <p>10. Which of the three lines of evidence do you find most convincing? Support your answer with data from at least two stations.</p>
-  <div class="lines l4"></div>
-</div>
-
-<!-- ───────── 3-3 Taxonomy ───────── -->
-<div class="wsd" id="doc-3-3">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 3 · Days 7–8</div>
-  <h1>Taxonomy Classification Organizer</h1>
-  <div class="who"><span>Name:</span><span>Date:</span><span>Period:</span></div>
-
-  <h2>Part A · The Nested Hierarchy</h2>
-  <p>Each level fits inside the one above it. Fill in the level names from broadest (top) to most specific (bottom).</p>
-  <svg class="svgfig" viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" font-family="DM Sans, sans-serif" style="max-width:5.2in">
-    <g fill="none" stroke="#1a1a18" stroke-width="1.5">
-      <rect x="10" y="10" width="500" height="280" rx="14" fill="#fdf6ec"/>
-      <rect x="35" y="42" width="450" height="240" rx="12" fill="#fbecd9"/>
-      <rect x="60" y="74" width="400" height="200" rx="10" fill="#f8e1c6"/>
-      <rect x="85" y="106" width="350" height="160" rx="9" fill="#f5d5b2"/>
-      <rect x="110" y="138" width="300" height="120" rx="8" fill="#f1c99f"/>
-      <rect x="135" y="170" width="250" height="80" rx="7" fill="#eebd8c"/>
-      <rect x="160" y="200" width="200" height="42" rx="6" fill="#eab079"/>
-    </g>
-    <g font-size="12" fill="#1a1a18">
-      <text x="22" y="32">1. ______________</text>
-      <text x="47" y="64">2. ______________</text>
-      <text x="72" y="96">3. ______________</text>
-      <text x="97" y="128">4. ______________</text>
-      <text x="122" y="160">5. ______________</text>
-      <text x="147" y="192">6. ______________</text>
-      <text x="172" y="218">7. ______________</text>
-      <text x="172" y="236">8. (inside 7) ______________</text>
-    </g>
-  </svg>
-  <p>Mnemonic: <b>D</b>ear <b>K</b>ing <b>P</b>hilip <b>C</b>ame <b>O</b>ver <b>F</b>or <b>G</b>ood <b>S</b>oup — or make your own: ______________________________</p>
-
-  <h2>Part B · Classify These Animals</h2>
-  <table class="wt center">
-    <tr><th>Level</th><th>Human</th><th>Gray wolf</th><th>House cat</th><th>Lion</th></tr>
-    <tr><th>Domain</th><td>Eukarya</td><td>Eukarya</td><td class="blank"></td><td>Eukarya</td></tr>
-    <tr><th>Kingdom</th><td>Animalia</td><td class="blank"></td><td>Animalia</td><td>Animalia</td></tr>
-    <tr><th>Phylum</th><td>Chordata</td><td>Chordata</td><td>Chordata</td><td class="blank"></td></tr>
-    <tr><th>Class</th><td class="blank"></td><td>Mammalia</td><td>Mammalia</td><td>Mammalia</td></tr>
-    <tr><th>Order</th><td>Primates</td><td>Carnivora</td><td>Carnivora</td><td>Carnivora</td></tr>
-    <tr><th>Family</th><td>Hominidae</td><td>Canidae</td><td>Felidae</td><td>Felidae</td></tr>
-    <tr><th>Genus</th><td><i>Homo</i></td><td><i>Canis</i></td><td><i>Felis</i></td><td><i>Panthera</i></td></tr>
-    <tr><th>Species</th><td><i>sapiens</i></td><td><i>lupus</i></td><td><i>catus</i></td><td><i>leo</i></td></tr>
-  </table>
-  <p>1. Fill in the four blank cells.</p>
-  <p>2. Which two animals are most closely related? At what level do they first differ?</p>
-  <div class="lines l2"></div>
-  <p>3. At which level do the wolf and house cat stop sharing a group?</p>
-  <div class="lines l2"></div>
-  <p>4. Write the scientific name of the lion correctly (two parts, correct capitalization, italics/underlined).</p>
-  <div class="lines l2"></div>
-
-  <h2>Part C · Binomial Nomenclature Rules</h2>
-  <ul>
-    <li>Two names: <b>Genus</b> + <b>species</b> (specific epithet).</li>
-    <li>Genus is capitalized; species is lowercase: <i>Homo sapiens</i>.</li>
-    <li>Typed in <i>italics</i>; underlined when handwritten.</li>
-  </ul>
-  <p>5. Circle the correctly written name: &nbsp; Canis Lupus &nbsp;·&nbsp; <i>canis lupus</i> &nbsp;·&nbsp; <i>Canis lupus</i> &nbsp;·&nbsp; Lupus canis</p>
-
-  <h2>Part D · Practice Set — Which Kingdom?</h2>
-  <table class="wt">
-    <tr><th style="width:44%">Description</th><th>Kingdom / Domain</th></tr>
-    <tr><td>Multicellular, makes its own food, cell walls of cellulose</td><td class="blank"></td></tr>
-    <tr><td>Single-celled, no nucleus, lives in boiling hot springs</td><td class="blank"></td></tr>
-    <tr><td>Multicellular, absorbs food from decaying matter, cell walls of chitin</td><td class="blank"></td></tr>
-    <tr><td>Multicellular, eats other organisms, no cell walls</td><td class="blank"></td></tr>
-    <tr><td>Single-celled with a nucleus, e.g. amoeba or paramecium</td><td class="blank"></td></tr>
-    <tr><td>Single-celled, no nucleus, e.g. <i>E. coli</i></td><td class="blank"></td></tr>
-  </table>
-
-  <h2>Part E · Purpose of Classification</h2>
-  <p>6. Give two reasons scientists use a universal classification system instead of common names.</p>
-  <div class="lines"></div>
-  <p>7. Modern classification increasingly uses DNA evidence. Why might DNA give a more accurate picture of relationships than appearance alone?</p>
-  <div class="lines"></div>
-</div>
-
-<!-- ───────── 3-4 Practice IA ───────── -->
-<div class="wsd" id="doc-3-4">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 3 · Days 11–14 Project</div>
-  <h1>Practice IA — Independent Research Project Guide</h1>
-  <div class="who"><span>Name:</span><span>Teacher check-in:</span><span>Due:</span></div>
-
-  <div class="note">In IB DP Biology, the Internal Assessment (IA) is an independent scientific investigation that counts toward your final grade. This "practice IA" uses the same four-criterion structure in a smaller, Grade 9 version so you know what to expect. Your write-up should be about <b>3–6 pages</b> including tables and graphs.</div>
-
-  <h2>Timeline</h2>
-  <table class="wt">
-    <tr><th style="width:16%">Day</th><th>Goal</th><th style="width:22%">Teacher sign-off</th></tr>
-    <tr><td>Day 11</td><td>Choose topic; write a focused research question; plan variables and method; risk assessment</td><td class="blank"></td></tr>
-    <tr><td>Day 12</td><td>Collect data (minimum 5 IV values × 3 trials, or an approved data-base set)</td><td class="blank"></td></tr>
-    <tr><td>Day 13</td><td>Process data: means, % change, graph with title/units; begin conclusion</td><td class="blank"></td></tr>
-    <tr><td>Day 14</td><td>Finish CER conclusion and evaluation; self-assess with the rubric; submit</td><td class="blank"></td></tr>
-  </table>
-
-  <h2>Step 1 · Pick a Topic</h2>
-  <p class="small">Ideas that connect to this course (or propose your own):</p>
-  <ul class="small" style="color:#1a1a18">
-    <li>Effect of light intensity or color on Elodea bubble rate</li>
-    <li>Effect of sugar concentration on yeast CO₂ production (balloon method)</li>
-    <li>Effect of salt concentration on % mass change of potato or carrot</li>
-    <li>Effect of temperature on enzyme activity (catalase in liver/potato + H₂O₂)</li>
-    <li>Effect of caffeine or exercise on reaction time (ruler drop)</li>
-    <li>Effect of distance from a path on plant species density (quadrats)</li>
-    <li>Database: relationship between habitat loss and species decline (published data)</li>
-  </ul>
-
-  <h2>Step 2 · Research Question</h2>
-  <p>Format: <i>How does [IV, with range and units] affect [DV, with units] in [organism/system]?</i></p>
-  <div class="lines l2"></div>
-  <table class="wt">
-    <tr><th style="width:30%">Independent variable (5+ values)</th><td class="blank"></td></tr>
-    <tr><th>Dependent variable (how measured)</th><td class="blank"></td></tr>
-    <tr><th>Controlled variables (3+, and how)</th><td class="blank" style="height:60px"></td></tr>
-    <tr><th>Background (why it matters, the biology)</th><td class="blank" style="height:60px"></td></tr>
-    <tr><th>Safety, ethical, environmental notes</th><td class="blank" style="height:40px"></td></tr>
-  </table>
-
-  <h2>Step 3 · Write-Up Structure</h2>
-  <ol>
-    <li><b>Introduction</b> — research question, background biology, hypothesis with a reason</li>
-    <li><b>Method</b> — materials and numbered steps clear enough for someone else to repeat; variables table</li>
-    <li><b>Results</b> — raw data table (units, uncertainties), processed data table, one correctly drawn graph</li>
-    <li><b>Conclusion</b> — CER: answer the research question using specific data; explain the biology</li>
-    <li><b>Evaluation</b> — strengths, weaknesses/sources of error, realistic improvements, extensions</li>
-  </ol>
-
-  <h2 class="pb">Step 4 · Rubric (modeled on the DP Biology IA criteria)</h2>
-  <table class="wt crit">
-    <tr><th style="width:17%">Criterion</th><th>1–2 marks</th><th>3–4 marks</th><th>5–6 marks</th></tr>
-    <tr><td><b>Research design</b></td><td>Question is vague; method is incomplete or not repeatable</td><td>Question is focused; method mostly repeatable; some controlled variables named</td><td>Focused question with clear context; method fully repeatable with variables controlled and justified</td></tr>
-    <tr><td><b>Data analysis</b></td><td>Data recorded but poorly organized; graph missing or incorrect</td><td>Tables and graph mostly correct; some processing (means) shown</td><td>Clear tables with units and uncertainty; correct processing; accurate, well-labeled graph</td></tr>
-    <tr><td><b>Conclusion</b></td><td>Conclusion stated but not linked to data</td><td>Conclusion supported by some data; biology partly explained</td><td>Conclusion fully supported by specific data and explained with correct biology</td></tr>
-    <tr><td><b>Evaluation</b></td><td>Limitations listed without explanation</td><td>Some limitations explained; improvements suggested</td><td>Key weaknesses explained with their effect on results; realistic, specific improvements and an extension</td></tr>
-  </table>
-  <p><b>Total: ____ / 24</b></p>
-
-  <h2>Self-Assessment Checklist</h2>
-  <ul style="list-style:none;margin-left:0">
-    <li>☐ My research question names the IV, DV, range and units.</li>
-    <li>☐ I tested at least 5 values of the IV with 3+ trials each.</li>
-    <li>☐ Every table column has a heading with units.</li>
-    <li>☐ My graph has a title, labeled axes with units, and an even scale.</li>
-    <li>☐ My claim directly answers the research question.</li>
-    <li>☐ I quoted specific numbers as evidence.</li>
-    <li>☐ My reasoning uses biology vocabulary from this course.</li>
-    <li>☐ I explained at least two weaknesses and how to fix them.</li>
-    <li>☐ I cited any sources I used.</li>
-  </ul>
-</div>
-
-<!-- ───────── 3-5 Final Study Guide ───────── -->
-<div class="wsd" id="doc-3-5">
-  <div class="wsd-tag">Grade 9 Biology · Big Unit 3 + Final Exam Review</div>
-  <h1>Big Unit 3 + Final Exam Study Guide</h1>
-  <div class="who"><span>Name:</span><span>Exam date:</span><span>Period:</span></div>
-
-  <h2>Big Unit 3 Objectives — Evolution &amp; Biodiversity</h2>
-  <ol>
-    <li>☐ Outline evidence for evolution: fossil record, comparative anatomy, molecular evidence.</li>
-    <li>☐ Explain Darwin's mechanism of natural selection.</li>
-    <li>☐ Distinguish variation, adaptation, and selective pressure.</li>
-    <li>☐ Interpret data showing a change in trait or allele frequency over generations.</li>
-    <li>☐ Explain how natural selection can lead to speciation; distinguish it from genetic drift.</li>
-    <li>☐ Outline the classification hierarchy from domain to species.</li>
-    <li>☐ Explain the purpose of classification and use binomial nomenclature correctly.</li>
-    <li>☐ Define biodiversity and explain its importance to ecosystem stability.</li>
-    <li>☐ Evaluate the impact of pollution, habitat loss, and climate change on biodiversity using data.</li>
-  </ol>
-
-  <h2>Cumulative Big Ideas</h2>
-  <table class="wt">
-    <tr><th style="width:22%">Unit</th><th>Must-know concepts</th><th style="width:30%">Must-do skills</th></tr>
-    <tr><td><b>1 · Cells</b></td><td>Prokaryote vs. eukaryote; organelle functions; cell theory; endosymbiosis; viruses; diffusion, osmosis, active transport; tonicity; homeostasis; photosynthesis &amp; respiration; ATP</td><td>Magnification &amp; size calculations; % change in mass; identifying variables</td></tr>
-    <tr><td><b>2 · Ecology</b></td><td>Biotic/abiotic; trophic levels; food webs; 10% rule; biomes; exponential vs. logistic growth; carrying capacity; symbiosis; succession</td><td>Energy transfer calculations; quadrat density estimates; reading growth curves</td></tr>
-    <tr><td><b>3 · Evolution</b></td><td>Natural selection (VISTA: Variation, Inheritance, Selection, Time, Adaptation); evidence for evolution; speciation; drift; classification; biodiversity &amp; human impact</td><td>Graphing frequency data; comparing molecular data; classification tables</td></tr>
-  </table>
-
-  <h2>Skills on Every Exam: Graphing &amp; CER</h2>
-  <div class="two">
-    <div class="note" style="margin:0"><b>A complete graph has…</b><br>✓ Descriptive title ("Effect of X on Y")<br>✓ IV on x-axis, DV on y-axis<br>✓ Axis labels with units<br>✓ Even, sensible scale<br>✓ Line or bar graph chosen correctly<br>✓ Key if more than one data set</div>
-    <div class="note" style="margin:0"><b>A complete CER has…</b><br>✓ <b>Claim</b> that answers the question<br>✓ <b>Evidence</b> with specific numbers and units<br>✓ <b>Reasoning</b> linking evidence to the claim with correct biology</div>
-  </div>
-
-  <h2>Practice Questions</h2>
-  <h3>Big Unit 3</h3>
-  <ol>
-    <li>Peppered moths became mostly dark during the Industrial Revolution when tree bark was blackened by soot. Explain this using all parts of natural selection.</li>
-    <li>Explain why "giraffes stretched their necks, so their babies were born with longer necks" is <b>not</b> how natural selection works.</li>
-    <li>Distinguish homologous from analogous structures with one example each.</li>
-    <li>A storm randomly kills half of a small beetle population, and the green beetles happen to survive more than the brown ones. Is this natural selection or genetic drift? Explain.</li>
-    <li>Two populations of squirrels are separated by a canyon for thousands of years. Describe how they could become separate species.</li>
-    <li>Explain why an ecosystem with high biodiversity is usually more stable than one with low biodiversity.</li>
-  </ol>
-  <h3>Cumulative</h3>
-  <ol start="7">
-    <li>Name the organelle where cellular respiration produces most ATP, and explain why muscle cells have many of them.</li>
-    <li>Saltwater fish are placed in fresh water. Predict what happens to their cells and explain using osmosis.</li>
-    <li>Producers in a lake capture 80,000 kJ. How much energy reaches tertiary consumers?</li>
-    <li>Sketch a logistic growth curve and label the carrying capacity.</li>
-    <li>A student measures how fertilizer amount (0, 5, 10, 15, 20 g) affects plant height after 3 weeks. Identify the IV, DV, two controlled variables, and the best graph type.</li>
-    <li>Write a full CER answering: "Does increasing light intensity increase the rate of photosynthesis?" using this data — lamp distance 10 cm: 42 bubbles/min; 20 cm: 30; 30 cm: 18; 40 cm: 9.</li>
-  </ol>
-  <div class="lines l6"></div>
-</div>
-
-</div>
 
 <script>
-/* ══════════════════════════════════════════
-   TAB NAVIGATION
-══════════════════════════════════════════ */
 function showPanel(n) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1755,216 +684,4 @@ function showPanel(n) {
   document.querySelector('.tab-btn[data-unit="' + n + '"]').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-/* ══════════════════════════════════════════
-   WORKSHEET BUTTONS & VIEWER
-══════════════════════════════════════════ */
-const wsLinks = {};
-let openDoc = null;
-
-function wsBtnClick(el) {
-  const href = el.getAttribute('href');
-  if (!href || href === '#') {
-    // No external link set — open the built-in worksheet
-    openWorksheet(el.id.replace('ws-btn-', ''));
-    return false;
-  }
-  return true;
-}
-
-function openWorksheet(key) {
-  const doc = document.getElementById('doc-' + key);
-  if (!doc) return;
-  if (openDoc) closeWorksheet();
-  document.getElementById('ws-modal-body').appendChild(doc);
-  doc.setAttribute('contenteditable', editMode ? 'true' : 'false');
-  openDoc = doc;
-  document.getElementById('ws-modal').classList.add('open');
-  document.getElementById('ws-modal').scrollTop = 0;
-  document.body.classList.add('ws-open');
-}
-
-function closeWorksheet() {
-  if (openDoc) {
-    openDoc.setAttribute('contenteditable', 'false');
-    document.getElementById('ws-library').appendChild(openDoc);
-    openDoc = null;
-  }
-  document.getElementById('ws-modal').classList.remove('open');
-  document.body.classList.remove('ws-open');
-}
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && openDoc) closeWorksheet(); });
-
-/* ══════════════════════════════════════════
-   EDIT MODE
-══════════════════════════════════════════ */
-let editMode = false;
-
-function toggleEdit() {
-  editMode = !editMode;
-  const btn = document.getElementById('edit-toggle');
-  const guide = document.getElementById('edit-guide');
-
-  if (editMode) {
-    document.body.classList.add('edit-mode');
-    btn.textContent = '✅ Done Editing';
-    btn.classList.add('active');
-    guide.classList.add('open');
-    document.querySelectorAll('[data-editable]').forEach(el => {
-      el.setAttribute('contenteditable', 'true');
-    });
-    prefillSidebar();
-  } else {
-    document.body.classList.remove('edit-mode');
-    btn.textContent = '✏️ Edit Page';
-    btn.classList.remove('active');
-    guide.classList.remove('open');
-    document.querySelectorAll('[data-editable]').forEach(el => {
-      el.setAttribute('contenteditable', 'false');
-    });
-    persistLinks();
-  }
-  if (openDoc) openDoc.setAttribute('contenteditable', editMode ? 'true' : 'false');
-}
-
-function closeGuide() {
-  toggleEdit();
-}
-
-function prefillSidebar() {
-  const school  = document.querySelector('.school-label');
-  const teacher = document.getElementById('meta-teacher');
-  const room    = document.getElementById('meta-room');
-  const period  = document.getElementById('meta-period');
-  if (school)  document.getElementById('inp-school').value  = school.innerText.trim() || '';
-  if (teacher) document.getElementById('inp-teacher').value = teacher.innerText.replace('[Teacher Name]','').trim() || '';
-  if (room)    document.getElementById('inp-room').value    = room.innerText.replace('[Room No.]','').trim() || '';
-  if (period)  document.getElementById('inp-period').value  = period.innerText.replace('[Fall / Spring]','').trim() || '';
-
-  // Read current worksheet links directly from the buttons' href attributes,
-  // so this works correctly even after downloading and reopening the file fresh.
-  for (let u = 1; u <= 3; u++) {
-    for (let w = 1; w <= 5; w++) {
-      const btn = document.getElementById(`ws-btn-${u}-${w}`);
-      const inp = document.getElementById(`ws-${u}-${w}`);
-      if (btn && inp) {
-        const href = btn.getAttribute('href');
-        if (href && href !== '#') inp.value = href;
-      }
-    }
-  }
-}
-
-function applyHeader() {
-  const school = document.getElementById('inp-school').value.trim();
-  const teacher = document.getElementById('inp-teacher').value.trim();
-  const room   = document.getElementById('inp-room').value.trim();
-  const period = document.getElementById('inp-period').value.trim();
-
-  if (school)  {
-    document.querySelector('.school-label').innerText = school;
-    document.getElementById('footer-school').innerText = school;
-  }
-  if (teacher) document.getElementById('meta-teacher').innerText = teacher;
-  if (room)    document.getElementById('meta-room').innerText = room;
-  if (period)  document.getElementById('meta-period').innerText = period;
-
-  showToast('Header updated ✓');
-}
-
-function applyLinks() {
-  let linked = 0, builtin = 0;
-  for (let u = 1; u <= 3; u++) {
-    for (let w = 1; w <= 5; w++) {
-      const inpId = `ws-${u}-${w}`;
-      const btnId = `ws-btn-${u}-${w}`;
-      const inp = document.getElementById(inpId);
-      const btn = document.getElementById(btnId);
-      if (!inp || !btn) continue;
-      if (inp.value.trim()) {
-        const url = inp.value.trim();
-        btn.setAttribute('href', url);
-        btn.innerHTML = '↗ Open / Download';
-        wsLinks[btnId] = url;
-        linked++;
-      } else {
-        // Empty field → use the built-in worksheet
-        btn.setAttribute('href', '#');
-        btn.innerHTML = 'Open / Print';
-        delete wsLinks[btnId];
-        builtin++;
-      }
-    }
-  }
-  showToast(`${linked} external link${linked !== 1 ? 's' : ''}, ${builtin} built-in worksheet${builtin !== 1 ? 's' : ''} ✓`);
-}
-
-function persistLinks() {
-  Object.entries(wsLinks).forEach(([id, url]) => {
-    const btn = document.getElementById(id);
-    if (btn) {
-      btn.setAttribute('href', url);
-      btn.innerHTML = '↗ Open / Download';
-    }
-  });
-}
-
-/* ══════════════════════════════════════════
-   DOWNLOAD UPDATED PAGE
-   Serializes the current DOM (with all edits baked in)
-   into a fresh, standalone .html file for download.
-   This is what makes edits persist for every visitor —
-   re-upload the downloaded file to your host, same filename.
-══════════════════════════════════════════ */
-function downloadUpdatedPage() {
-  const wasEditing = editMode;
-  const reopenKey = openDoc ? openDoc.id.replace('doc-', '') : null;
-  if (openDoc) closeWorksheet();
-
-  // Temporarily present the page in its clean, "view" state before capturing it,
-  // so the downloaded file always opens with edit mode off by default.
-  document.body.classList.remove('edit-mode');
-  document.querySelectorAll('[data-editable]').forEach(el => el.setAttribute('contenteditable', 'false'));
-  document.getElementById('edit-guide').classList.remove('open');
-  const toggleBtn = document.getElementById('edit-toggle');
-  const prevToggleText = toggleBtn.textContent;
-  const prevToggleActive = toggleBtn.classList.contains('active');
-  toggleBtn.textContent = '✏️ Edit Page';
-  toggleBtn.classList.remove('active');
-
-  const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-
-  // Restore the current editing state so the teacher isn't interrupted mid-edit
-  if (wasEditing) {
-    document.body.classList.add('edit-mode');
-    document.querySelectorAll('[data-editable]').forEach(el => el.setAttribute('contenteditable', 'true'));
-    document.getElementById('edit-guide').classList.add('open');
-    toggleBtn.textContent = prevToggleText;
-    if (prevToggleActive) toggleBtn.classList.add('active');
-  }
-  if (reopenKey) openWorksheet(reopenKey);
-
-  const blob = new Blob([htmlContent], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'Grade9_Biology_Class_Agenda.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-
-  showToast('Updated file downloaded ✓ Re-upload it to your host to publish changes.');
-}
-
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.style.cssText = 'position:fixed;bottom:80px;right:24px;background:#2d6a4f;color:#fff;padding:10px 18px;border-radius:8px;font-family:DM Sans,sans-serif;font-size:13px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.2);z-index:100001;transition:opacity .4s;';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2200);
-}
-</script>
-</body>
-</html>
+</script></body></html>
